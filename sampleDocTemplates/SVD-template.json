@@ -1,5 +1,6 @@
 {
-  "templateFile": "C:\\assaf\\SRS.dotx",
+  "documentTitle": "SVD",
+  "templateFile": "",
   "contentControls": [
     {
       "title": "system-capabilities",

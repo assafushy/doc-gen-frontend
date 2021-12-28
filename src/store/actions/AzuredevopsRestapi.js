@@ -1,4 +1,4 @@
-import AzureRestApi from "azuredevops-api";
+import AzureRestApi from "@doc-gen/dg-data-provider-azuredevops";
 
 export default class AzuredevopsRestapi {
   azureRestApi;
@@ -6,7 +6,9 @@ export default class AzuredevopsRestapi {
     this.azureRestApi = new AzureRestApi(orgUrl, token);
   }
   async getTeamProjects() {
-    return this.azureRestApi.GetProjects();
+    let managmentDataProvider =
+      await this.azureRestApi.getMangementDataProvider();
+    return await managmentDataProvider.GetProjects();
   }
   async getSharedQueries(teamProjectId = null) {
     return this.azureRestApi.GetSharedQueries(teamProjectId, "");

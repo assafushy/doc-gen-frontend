@@ -1,14 +1,17 @@
 import { observable, action, makeObservable, computed } from "mobx";
 import { enableLogging } from "mobx-logger";
 import RestApi from "./actions/AzuredevopsRestapi";
+import cookies from "js-cookies";
 import {
   getBucketFileList,
   getJSONContentFromFile,
   sendDocumentTogenerator,
 } from "../store/data/docManagerApi";
 
+const azureDevopsUrl = cookies.getItem("azuredevopsUrl");
+const azuredevopsPat = cookies.getItem("azuredevopsPat");
 class DocGenDataStore {
-  azureRestClient = new RestApi("<organzetion>", "<PAT>"); //!!CHNAGED
+  azureRestClient = new RestApi(azureDevopsUrl, azuredevopsPat);
 
   constructor() {
     makeObservable(this, {
@@ -60,7 +63,6 @@ class DocGenDataStore {
   //for fetching docTemplates
   fetchDocTemplates() {
     getBucketFileList("document-forms").then(async (data = []) => {
-      console.log(data);
       await Promise.all(
         data.map(async (form) => {
           let jsonFormTemplate = await getJSONContentFromFile(form.url);
@@ -71,6 +73,7 @@ class DocGenDataStore {
       );
     });
   }
+
   //for fetching teamProjects
   fetchTeamProjects() {
     this.azureRestClient.getTeamProjects().then((data) => {

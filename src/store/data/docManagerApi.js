@@ -2,6 +2,8 @@ import axios from "axios";
 import C from "../constants";
 import { v4 as uuidv4 } from "uuid";
 
+var Minio = require("minio");
+
 const headers = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -10,18 +12,34 @@ const headers = {
 };
 
 export const getBucketFileList = async (bucketName) => {
-  try {
-    //!!bucket name validation should be a functio in doc manager
-    bucketName = bucketName.replace("_", "-");
-    let res = await axios.get(
-      `${C.minio_url}/getFileList?bucketName=${bucketName}`,
-      headers
-    );
-    return res.data;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
+  return new Promise((resolve, reject) => {
+    const s3Client = new Minio.Client({
+      endPoint: C.minio_url,
+      port: 9000,
+      useSSL: false,
+      accessKey: "your-root-user",
+      secretKey: "your-root-password",
+    });
+    try {
+      let objects = [];
+      bucketName = bucketName.replace("_", "-");
+      let stream = s3Client.listObjectsV2(bucketName);
+      stream.on("data", (obj) => {
+        objects.push(obj);
+      });
+      stream.on("end", (obj) => {
+        resolve(objects);
+      });
+      stream.on("error", (obj) => {
+        throw new Error(obj);
+      });
+      console.log(objects);
+      return objects;
+    } catch (err) {
+      console.log(err);
+      reject([]);
+    }
+  });
 };
 
 export const getJSONContentFromFile = async (fileUrl) => {
