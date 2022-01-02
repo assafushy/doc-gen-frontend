@@ -42,10 +42,10 @@ export const getBucketFileList = async (bucketName) => {
   });
 };
 
-export const getJSONContentFromFile = async (fileUrl) => {
+export const getJSONContentFromFile = async (bucketName,filename) => {
   try {
-    console.log(fileUrl);
-    return await axios.get(fileUrl, headers);
+    console.log(`fetching url: ${filename}`);
+    return await axios.get(`${C.minio_url}:4000/${bucketName}/${filename}`, headers);
   } catch (err) {
     console.log(err);
     return {};

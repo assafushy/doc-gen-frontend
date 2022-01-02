@@ -65,7 +65,8 @@ class DocGenDataStore {
     getBucketFileList("document-forms").then(async (data = []) => {
       await Promise.all(
         data.map(async (form) => {
-          let jsonFormTemplate = await getJSONContentFromFile(form.url);
+          console.log(form)
+          let jsonFormTemplate = await getJSONContentFromFile("document-forms",form.name);
           let json = JSON.parse(JSON.stringify(jsonFormTemplate.data));
           this.documentTemplates.push(json);
           console.log(this.documentTemplates);

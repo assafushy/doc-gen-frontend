@@ -8,22 +8,26 @@ export default class AzuredevopsRestapi {
   async getTeamProjects() {
     let managmentDataProvider =
       await this.azureRestApi.getMangementDataProvider();
-    return await managmentDataProvider.GetProjects();
+    return managmentDataProvider.GetProjects();
   }
   async getSharedQueries(teamProjectId = null) {
-    return this.azureRestApi.GetSharedQueries(teamProjectId, "");
+    let ticketsDataProvider = await this.azureRestApi.getTicketsDataProvider()
+    return ticketsDataProvider.GetSharedQueries(teamProjectId, ""); 
   }
   async getQueryResults(queryId = null, teamProjectId = "") {
-    return this.azureRestApi.GetQueryResultById(queryId, teamProjectId);
+    let ticketsDataProvider = await this.azureRestApi.getTicketsDataProvider()
+    return ticketsDataProvider.GetQueryResultById(queryId, teamProjectId);    
   }
 
   async getTestPlansList(teamProjectId = "") {
-    return this.azureRestApi.GetTestPlans(teamProjectId);
+    let testDataProvider = this.azureRestApi.getTestDataProvider()
+    return testDataProvider.GetTestPlans(teamProjectId);
   }
 
   async getCollectionLinkTypes() {
     try {
-      let linkTypes = await this.azureRestApi.GetCllectionLinkTypes();
+      let mangementDataProvider = this.azureRestApi.getMangementDataProvider()
+      let linkTypes = await mangementDataProvider.GetCllectionLinkTypes();
       return await linkTypes.value
         .map((link) => {
           return {
