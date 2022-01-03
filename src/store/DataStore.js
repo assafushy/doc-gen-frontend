@@ -65,7 +65,11 @@ class DocGenDataStore {
     getBucketFileList("document-forms").then(async (data = []) => {
       await Promise.all(
         data.map(async (form) => {
-          let jsonFormTemplate = await getJSONContentFromFile(form.url);
+          let jsonFormTemplate = await getJSONContentFromFile(
+            "document-forms",
+            form.name
+          );
+          console.log(jsonFormTemplate);
           let json = JSON.parse(JSON.stringify(jsonFormTemplate.data));
           this.documentTemplates.push(json);
           console.log(this.documentTemplates);
@@ -77,6 +81,7 @@ class DocGenDataStore {
   //for fetching teamProjects
   fetchTeamProjects() {
     this.azureRestClient.getTeamProjects().then((data) => {
+      console.log(data);
       this.teamProjectsList =
         data.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || [];
     });

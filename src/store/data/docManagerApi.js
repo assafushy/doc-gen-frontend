@@ -31,7 +31,8 @@ export const getBucketFileList = async (bucketName) => {
         resolve(objects);
       });
       stream.on("error", (obj) => {
-        throw new Error(obj);
+        // throw new Error(obj);
+        return [];
       });
       console.log(objects);
       return objects;
@@ -42,14 +43,34 @@ export const getBucketFileList = async (bucketName) => {
   });
 };
 
-export const getJSONContentFromFile = async (fileUrl) => {
-  try {
-    console.log(fileUrl);
-    return await axios.get(fileUrl, headers);
-  } catch (err) {
-    console.log(err);
-    return {};
-  }
+export const getJSONContentFromFile = async (bucketName, fileName) => {
+  return new Promise((resolve, reject) => {
+    const s3Client = new Minio.Client({
+      endPoint: C.minio_url,
+      port: 9000,
+      useSSL: false,
+      accessKey: "your-root-user",
+      secretKey: "your-root-password",
+    });
+
+    let miniData;
+    s3Client.getObject(bucketName, fileName, function (err, dataStream) {
+      if (err) {
+        return console.log(err);
+      }
+      dataStream.on("data", function (chunk) {
+        miniData += chunk;
+      });
+      dataStream.on("end", function () {
+        const json = JSON.stringify(miniData);
+        resolve(json);
+      });
+      dataStream.on("error", function (err) {
+        console.log(err);
+        reject(err);
+      });
+    });
+  });
 };
 
 export const sendDocumentTogenerator = async (docJson) => {

@@ -12,6 +12,7 @@ function App({ store }) {
     setCookie("azuredevopsUrl", selectedUrl);
     setCookie("azuredevopsPat", selectedPat);
   };
+
   return (
     <div className="App">
       <ToastContainer />
