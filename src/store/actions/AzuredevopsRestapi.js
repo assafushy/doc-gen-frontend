@@ -26,7 +26,8 @@ export default class AzuredevopsRestapi {
 
   async getCollectionLinkTypes() {
     try {
-      let linkTypes = await this.azureRestApi.GetCllectionLinkTypes();
+      let mangementDataProvider = this.azureRestApi.getMangementDataProvider();
+      let linkTypes = await mangementDataProvider.GetCllectionLinkTypes();
       return await linkTypes.value
         .map((link) => {
           return {
