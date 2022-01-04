@@ -62,12 +62,12 @@ export const getJSONContentFromFile = async (bucketName, fileName) => {
         miniData += chunk;
       });
       dataStream.on("end", function () {
-        const json = JSON.stringify(miniData);
-        resolve(json);
+        const json = JSON.parse(JSON.stringify(miniData));
+        return resolve(json);
       });
       dataStream.on("error", function (err) {
         console.log(err);
-        reject(err);
+        return reject(err);
       });
     });
   });

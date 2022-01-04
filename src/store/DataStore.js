@@ -70,7 +70,7 @@ class DocGenDataStore {
             form.name
           );
           console.log(jsonFormTemplate);
-          let json = JSON.parse(JSON.stringify(jsonFormTemplate.data));
+          let json = JSON.parse(JSON.stringify(jsonFormTemplate));
           this.documentTemplates.push(json);
           console.log(this.documentTemplates);
         })
@@ -140,7 +140,7 @@ class DocGenDataStore {
     });
   }
   //for fetching documents
-  fetchDocuments() {
+  fetchDocuments() { 
     getBucketFileList(this.teamProjectName.toLowerCase()).then((data) => {
       this.documents = data;
     });
