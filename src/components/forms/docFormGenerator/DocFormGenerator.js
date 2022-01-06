@@ -80,12 +80,22 @@ const DocFormGenerator = observer(
           })}
           styles={dropdownStyles}
           onChange={(event, newValue) => {
-            store.setTeamProject(newValue.key);
+            store.setTeamProject(newValue.key,newValue.text);
           }}
         />
 
-        {/* TODO:REFACTOR THIS CONTROLLER TO MOBX */}
-        <TemplateSelector setTemplate={() => {}} />
+        <Dropdown
+          placeholder="Select a Template"
+          label="Select a Template"
+          value={store.selectedTemplate.name}
+          options={store.templateList.map((template)=> {
+                return { key: template.url, text: template.name };
+          })}
+          styles={dropdownStyles}
+          onChange= {(event,newValue)=>{
+            store.setSelectedTemplate(newValue)}}
+          />
+
         <br />
         <Grid container spacing={3}>
           {jsonDoc.contentControls
