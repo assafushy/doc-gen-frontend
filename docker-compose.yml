@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   dg-content-control:
-    image: assafushy/dg-content-control:latest
+    image: assafushy/dg-content-control-generator:latest
     ports:
       - "3000:3000"
   dg-api-gate:

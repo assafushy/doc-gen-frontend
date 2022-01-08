@@ -34,7 +34,6 @@ export const getBucketFileList = async (bucketName) => {
         // throw new Error(obj);
         return [];
       });
-      console.log(objects);
       return objects;
     } catch (err) {
       console.log(err);
@@ -52,8 +51,7 @@ export const getJSONContentFromFile = async (bucketName, fileName) => {
       accessKey: "your-root-user",
       secretKey: "your-root-password",
     });
-
-    let miniData;
+    let miniData = "";
     s3Client.getObject(bucketName, fileName, function (err, dataStream) {
       if (err) {
         return console.log(err);
@@ -62,7 +60,10 @@ export const getJSONContentFromFile = async (bucketName, fileName) => {
         miniData += chunk;
       });
       dataStream.on("end", function () {
-        const json = JSON.parse(JSON.stringify(miniData));
+        let cleaned = String(miniData).replace(/(\r\n|\n|\r)/gm, "");
+        cleaned = String(cleaned).replace(/ /g, "");
+        const json = JSON.parse(cleaned);
+        console.log(json);
         return resolve(json);
       });
       dataStream.on("error", function (err) {
