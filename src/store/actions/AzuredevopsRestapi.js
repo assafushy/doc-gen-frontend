@@ -23,6 +23,10 @@ export default class AzuredevopsRestapi {
     let testDataProvider = await this.azureRestApi.getTestDataProvider();
     return testDataProvider.GetTestPlans(teamProjectId);
   }
+  async getGitRepoList(teamProjectId = "") {
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetTeamProjectGitReposList(teamProjectId);
+  }
 
   async getCollectionLinkTypes() {
     try {

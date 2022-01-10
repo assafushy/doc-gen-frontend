@@ -24,6 +24,7 @@ class DocGenDataStore {
       teamProjectsList: observable,
       templateList: observable,
       testPlansList: observable,
+      repoList: observable,
       linkTypes: observable,
       documents: observable,
       requestJson: computed,
@@ -33,6 +34,8 @@ class DocGenDataStore {
       setSelectedTemplate: action,
       fetchSharedQueries: action,
       setSharedQueries: action,
+      fetchGitRepoList: action,
+      setGitRepoList: action,
       fetchTestPlans: action,
       setTestPlansList: action,
     });
@@ -55,6 +58,7 @@ class DocGenDataStore {
   linkTypesFilter = []; // list of selected links to filter by
   testPlansList = []; // list of testplans
   documents = []; //list of all project documents
+  repoList = [] //list of all project repos
 
   //for setting focused teamProject
   setDocumentTitle(documentTitle) {
@@ -92,6 +96,7 @@ class DocGenDataStore {
     this.fetchDocuments();
     this.fetchSharedQueries();
     this.fetchTestPlans();
+    this.fetchGitRepoList();
   }
   //for fetching templatefiles list
   fetchTemplatesList() {
@@ -131,6 +136,15 @@ class DocGenDataStore {
   //for setting shared queries
   setSharedQueries(data) {
     this.sharedQueries = data;
+  }
+  fetchGitRepoList(){
+    this.azureRestClient.getGitRepoList(this.teamProject).then((data)=> {
+      this.setGitRepoList(data);
+    })
+  }
+  setGitRepoList(data){
+    this.repoList = data;
+    console.log(data);  
   }
   //for fetching test plans
   fetchTestPlans() {
