@@ -24,7 +24,12 @@ class DocGenDataStore {
       teamProjectsList: observable,
       templateList: observable,
       testPlansList: observable,
+      pipelineList:observable,
+      pipelineRunHistory:observable,
+      releaseList:observable,
+      releaseHistory:observable,
       repoList: observable,
+      gitRepoCommits: observable,
       linkTypes: observable,
       documents: observable,
       requestJson: computed,
@@ -36,6 +41,16 @@ class DocGenDataStore {
       setSharedQueries: action,
       fetchGitRepoList: action,
       setGitRepoList: action,
+      fetchGitRepoCommits: action,
+      setGitRepoCommits: action,
+      fetchPipelineList:action,
+      setPipelineList:action,
+      fetchPipelineRunHistory: action,
+      setPipelineRunHistory: action,
+      fetchReleaseList:action,
+      setReleaseList:action,
+      fetchReleaseHistory:action,
+      setReleaseHistory: action,
       fetchTestPlans: action,
       setTestPlansList: action,
     });
@@ -58,7 +73,13 @@ class DocGenDataStore {
   linkTypesFilter = []; // list of selected links to filter by
   testPlansList = []; // list of testplans
   documents = []; //list of all project documents
-  repoList = [] //list of all project repos
+  repoList = []; //list of all project repos
+  gitRepoCommits = []; //commit history of a specific repo
+  pipelineList = []; //list of all project pipelines
+  pipelineRunHistory = []; //pipeline history of a specific pipeline
+  releaseList = []; //list of all project releaese
+  releaseHistory = []; //release history of a specific pipeline
+
 
   //for setting focused teamProject
   setDocumentTitle(documentTitle) {
@@ -97,6 +118,8 @@ class DocGenDataStore {
     this.fetchSharedQueries();
     this.fetchTestPlans();
     this.fetchGitRepoList();
+    this.fetchPipelineList();
+    this.fetchReleaseList();
   }
   //for fetching templatefiles list
   fetchTemplatesList() {
@@ -137,14 +160,65 @@ class DocGenDataStore {
   setSharedQueries(data) {
     this.sharedQueries = data;
   }
+  //for fetching repo list
   fetchGitRepoList(){
     this.azureRestClient.getGitRepoList(this.teamProject).then((data)=> {
       this.setGitRepoList(data);
     })
   }
+  // for setting repo list
   setGitRepoList(data){
-    this.repoList = data;
-    console.log(data);  
+    this.repoList = data.value || [];
+  }
+  //for fetching git repo commits
+  fetchGitRepoCommits(RepoId){
+      this.azureRestClient.getGitRepoCommits(RepoId,this.teamProject).then((data)=> {
+      this.setGitRepoCommits(data);
+    })
+  }
+  //for setting git repo commits
+  setGitRepoCommits(data){
+    this.gitRepoCommits = data.value;
+    }
+  //for fetching pipeline list
+  fetchPipelineList(){
+    this.azureRestClient.getPipelineList(this.teamProject).then((data)=> {
+      this.setPipelineList(data);
+    })
+  }
+  //for setting pipeline list
+  setPipelineList(data){
+    this.pipelineList = data.value || [];
+  }
+  //for fetching pipeline run history
+  fetchPipelineRunHistory(pipelineId){
+    this.azureRestClient.getPipelineRunHistory(pipelineId,this.teamProject).then((data)=> {
+      this.setPipelineRunHistory(data)
+    })
+  }
+  //for setting pipeline run history 
+  setPipelineRunHistory(data){
+    this.pipelineRunHistory = data.value || [];
+  }
+  //for fetching release list
+  fetchReleaseList(){
+    this.azureRestClient.getReleaseList(this.teamProject).then((data)=> {
+      this.setReleaseList(data);
+    })
+  }
+  //for setting release list
+  setReleaseList(data){
+    this.releaseList = data.value || [];
+  }
+  //for fetching release history
+  fetchReleaseHistory(releaseDefinitionId){
+    this.azureRestClient.getReleaseHistory(releaseDefinitionId,this.teamProject).then((data)=> {
+      this.setReleaseHistory(data);
+    })
+  }
+  //for setting release history
+  setReleaseHistory(data){
+    this.releaseHistory = data.value || [];
   }
   //for fetching test plans
   fetchTestPlans() {

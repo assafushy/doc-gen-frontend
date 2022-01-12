@@ -35,7 +35,7 @@ export default class AzuredevopsRestapi {
 
   async getReleaseList(teamProjectId = "") {
     let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
-    return pipelineDataProvider.getAllReleases(teamProjectId);
+    return pipelineDataProvider.GetAllReleases(teamProjectId);
   }
 
   async getPipelineList(teamProjectId = "") {
