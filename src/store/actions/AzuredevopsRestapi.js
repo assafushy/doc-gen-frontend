@@ -28,6 +28,31 @@ export default class AzuredevopsRestapi {
     return gitDataProvider.GetTeamProjectGitReposList(teamProjectId);
   }
 
+  async getGitRepoCommits(RepoId = "",teamProjectId = "") {
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetCommitsForRepo(teamProjectId,RepoId);
+  }
+
+  async getReleaseList(teamProjectId = "") {
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.getAllReleases(teamProjectId);
+  }
+
+  async getPipelineList(teamProjectId = "") {
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetAllPipelines(teamProjectId);
+  }
+
+  async getReleaseHistory(definitionId = "",teamProjectId = ""){
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetReleaseHistory(teamProjectId,definitionId);
+  }
+
+  async getPipelineRunHistory(pipelineId = "",teamProjectId = ""){
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetPipelineRunHistory(teamProjectId,pipelineId);
+  }
+  
   async getCollectionLinkTypes() {
     try {
       let mangementDataProvider = this.azureRestApi.getMangementDataProvider();
