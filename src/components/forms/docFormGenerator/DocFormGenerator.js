@@ -9,6 +9,7 @@ import TemplateSelector from "../../common/TemplateSelector";
 import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
 import TraceTableSelector from "../../common/TraceTableSelector";
+import ChangeTableSelector from "../../common/ChangeTableSelector";
 
 const dropdownStyles = {
   dropdown: { width: 300 },
@@ -63,6 +64,17 @@ const DocFormGenerator = observer(
               linkTypeFilterArray={null}
             />
           );
+          case "change-table":
+          return (
+            <ChangeTableSelector
+              store={store}
+              type={formControl.type}
+              skin={formControl.skin}
+              contentControlTitle={formControl.title}
+              editingMode={false}
+              addToDocumentRequestObject={store.addToDocumentRequestObject}
+            />
+          );
         default:
           return null;
       }
@@ -95,7 +107,6 @@ const DocFormGenerator = observer(
           onChange= {(event,newValue)=>{
             store.setSelectedTemplate(newValue)}}
           />
-
         <br />
         <Grid container spacing={3}>
           {jsonDoc.contentControls
