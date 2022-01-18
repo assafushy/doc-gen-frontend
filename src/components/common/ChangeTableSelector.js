@@ -6,6 +6,7 @@ import CommitRangeSelector from "./CommitRangeSelector";
 import CommitDateSelector from "./CommitDateSelector";
 import PipelineSelector from "./PipelineSelector";
 import ReleaseSelector from "./ReleaseSelector";
+import { observer } from "mobx-react";
 
 const dropdownStyles = {
   dropdown: { width: 300 },
@@ -16,7 +17,7 @@ const baseDataType = [
   {key: 2, text: "pipeline-range", type: "pipeline"},
   {key: 3, text: "release-range", type: "release"}];
 
-const ChangeTableSelector = ({
+const ChangeTableSelector = observer(({
   store,
   contentControlType,
   contentControlSkin,
@@ -84,6 +85,6 @@ const ChangeTableSelector = ({
       <br />
     </div>
   );
-};
+});
 
 export default ChangeTableSelector;
