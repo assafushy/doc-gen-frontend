@@ -173,12 +173,12 @@ class DocGenDataStore {
   //for fetching git repo commits
   fetchGitRepoCommits(RepoId){
       this.azureRestClient.getGitRepoCommits(RepoId,this.teamProject).then((data)=> {
-      this.setGitRepoCommits(data);
+        this.setGitRepoCommits(data);
     })
   }
   //for setting git repo commits
   setGitRepoCommits(data){
-    this.gitRepoCommits = data.value;
+    this.gitRepoCommits = data.value || [];
     }
   //for fetching pipeline list
   fetchPipelineList(){

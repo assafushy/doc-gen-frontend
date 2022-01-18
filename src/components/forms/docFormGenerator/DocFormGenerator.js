@@ -91,7 +91,7 @@ const DocFormGenerator = observer(
             return { key: teamProject.id, text: teamProject.name };
           })}
           styles={dropdownStyles}
-          onChange={(event, newValue) => {
+          onChange={async (event, newValue) => {
             store.setTeamProject(newValue.key,newValue.text);
           }}
         />

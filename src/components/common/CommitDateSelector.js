@@ -4,9 +4,12 @@ import { headingLevelOptions } from "../../store/data/dropDownOptions";
 
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 
-// import DatePicker from '@mui/lab/DatePicker';
-// import AdapterDateFns from '@mui/lab/AdapterDateFns';
-// import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import {
+  DatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+
+import DateFnsUtils from '@date-io/date-fns';
 
 
 const dropdownStyles = {
@@ -24,12 +27,12 @@ const CommitDateSelector = ({
     key: "",
     text: "",
   });
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
 
-  const [selectedDate, setSelectedDate] = useState({
-    key: "",
-    text: "",
-  });
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
+
 
   return (
     <div>
@@ -56,19 +59,25 @@ const CommitDateSelector = ({
         }}
         
       />
-{/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-  <DatePicker
-    label="Basic example"
-    value={selectedDate}
-    onChange={(newValue) => {
-      setSelectedDate(newValue);
-    }}
-    // renderInput={(params) => <TextField {...params} />}
-  />
-</LocalizationProvider> */}
-      <br />
-      <br />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <DatePicker 
+          autoOk
+          label="StartDate"
+          disableFuture
+          value={selectedStartDate}
+            onChange={setSelectedStartDate}
+          />
 
+          <DatePicker 
+          autoOk
+          label="EndDate"
+          disableFuture
+          value={selectedEndDate}
+            onChange={setSelectedEndDate} 
+          />
+        </MuiPickersUtilsProvider>
+      <br />
+      <br />
     </div>
   );
 };
