@@ -2,6 +2,7 @@ import { observable, action, makeObservable, computed } from "mobx";
 import { enableLogging } from "mobx-logger";
 import RestApi from "./actions/AzuredevopsRestapi";
 import cookies from "js-cookies";
+import C from "./constants";
 import {
   getBucketFileList,
   getJSONContentFromFile,
@@ -149,6 +150,7 @@ class DocGenDataStore {
   //for setting selected template
   setSelectedTemplate(templateObject) {
     this.selectedTemplate = templateObject;
+    this.selectedTemplate.key = `${C.minio_url}/templates/${templateObject.text}`// add constants, default template buckets
   }
   //for fetching shared quries
   fetchSharedQueries() {
@@ -194,6 +196,7 @@ class DocGenDataStore {
   fetchPipelineRunHistory(pipelineId){
     this.azureRestClient.getPipelineRunHistory(pipelineId,this.teamProject).then((data)=> {
       this.setPipelineRunHistory(data)
+      console.log(data)
     })
   }
   //for setting pipeline run history 
@@ -250,12 +253,12 @@ class DocGenDataStore {
     }
     //zeroing down the filter object
     this.linkTypesFilter = [];
-
-    if (arrayIndex) {
+    if (arrayIndex !== null) {
       this.contentControls[arrayIndex] = contentControlObject;
     } else {
       this.contentControls.push(contentControlObject);
     }
+    console.log(contentControlObject);
   };
   sendRequestToDocGen() {
     let docReq = this.requestJson;
@@ -264,9 +267,18 @@ class DocGenDataStore {
   }
   get requestJson() {
     return {
-      documentTitle: this.documentTitle,
-      teamProjectName: this.teamProject,
+      tfsCollectionUri:azureDevopsUrl,
+      PAT:azuredevopsPat,
+      teamProjectName: this.teamProjectName,
       templateFile: this.selectedTemplate.key,
+      uploadProperties:{
+        bucketName: "docgentestbucket",
+        subDirectoryInBucket:"docs",
+        fileName: "firstFrontEndDoc",
+        AwsAccessKeyId: "your-root-user",
+        AwsSecretAccessKey: "your-root-password",
+        Region: "ap-southeast-1"
+        },
       contentControls: this.contentControls,
     };
   }

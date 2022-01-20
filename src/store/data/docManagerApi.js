@@ -2,6 +2,8 @@ import axios from "axios";
 import C from "../constants";
 import { v4 as uuidv4 } from "uuid";
 
+
+
 var Minio = require("minio");
 
 const headers = {
@@ -14,7 +16,7 @@ const headers = {
 export const getBucketFileList = async (bucketName) => {
   return new Promise((resolve, reject) => {
     const s3Client = new Minio.Client({
-      endPoint: C.minio_url,
+      endPoint: C.minio_endPoint,
       port: 9000,
       useSSL: false,
       accessKey: "your-root-user",
@@ -45,7 +47,7 @@ export const getBucketFileList = async (bucketName) => {
 export const getJSONContentFromFile = async (bucketName, fileName) => {
   return new Promise((resolve, reject) => {
     const s3Client = new Minio.Client({
-      endPoint: C.minio_url,
+      endPoint: C.minio_endPoint,
       port: 9000,
       useSSL: false,
       accessKey: "your-root-user",
