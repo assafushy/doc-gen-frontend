@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 
@@ -12,13 +12,36 @@ const dropdownStyles = {
 const ReleaseSelector = ({
   store,
   contentControlTitle,
-  type,
-  releaseList,
-  releaseHistory,
+  skin,
+  releaseDefinitionList,
+  releaseDefinitionHistory,
   editingMode,
   addToDocumentRequestObject,
 }) => {
-  const [SelectedRelease, setSelectedRelease] = useState({
+
+  useEffect(() => {
+    UpdateDocumentRequestObject();
+    });
+  
+  function UpdateDocumentRequestObject(){
+    addToDocumentRequestObject(
+      {
+        type:"change-description-table",
+        title: contentControlTitle,
+        skin: skin,
+        headingLevel: contentHeadingLevel,
+        data: {
+          from:selectedReleaseHistoryStart.key,
+          to:selectedReleaseHistoryEnd.key,
+          rangeType:"release",
+          linkTypeFilterArray:null
+        },
+      },
+      0
+      );
+  }
+
+  const [SelectedReleaseDefinition, setSelectedReleaseDefinition] = useState({
     key: "",
     text: "",
   });
@@ -50,23 +73,24 @@ const ReleaseSelector = ({
       <Dropdown
         placeholder="Select a Release"
         label="Select a Release"
-        value={SelectedRelease.key}
-        options={releaseList.map((release) => {
-          return { key: release.id, text: release.name };
+        value={SelectedReleaseDefinition.key}
+        options={releaseDefinitionList.map((releaseDefinition) => {
+          return { key: releaseDefinition.id, text: releaseDefinition.name };
         })}
         styles={dropdownStyles}
         onChange={async (event, newValue) => {
-          setSelectedRelease(newValue);
-          store.fetchReleaseHistory(newValue.id);
+          setSelectedReleaseDefinition(newValue);
+          console.log(newValue);
+          store.fetchReleaseDefinitionHistory(newValue.id);
         }}
       />
-      {SelectedRelease.key !== "" ? (
+      {SelectedReleaseDefinition.key !== "" ? (
             <Dropdown
               placeholder= "Select start release"
               label= "Select start release"
               value = {selectedReleaseHistoryStart.key}
-              options = {releaseHistory.map((run) => {
-                return { key: run.Id, text: run.name}
+              options = {releaseDefinitionHistory.map((run) => {
+                return { key: run.id, text: run.name}
                   })}
                 styles={dropdownStyles}
                 onChange={async (event, newValue) => {
@@ -74,13 +98,13 @@ const ReleaseSelector = ({
                   }}
                 />
                 ) : null}      
-        {SelectedRelease.key !== "" ? (
+        {SelectedReleaseDefinition.key !== "" ? (
             <Dropdown
               placeholder= "Select end release"
               label= "Select end release"
               value = {selectedReleaseHistoryEnd.key}
-              options = {releaseHistory.map((run) => {
-                return { key: run.Id, text: run.name}
+              options = {releaseDefinitionHistory.map((run) => {
+                return { key: run.id, text: run.name}
                   })}
                 styles={dropdownStyles}
                 onChange={async (event, newValue) => {

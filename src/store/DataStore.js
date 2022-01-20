@@ -27,8 +27,8 @@ class DocGenDataStore {
       testPlansList: observable,
       pipelineList:observable,
       pipelineRunHistory:observable,
-      releaseList:observable,
-      releaseHistory:observable,
+      releaseDefinitionList:observable,
+      releaseDefinitionHistory:observable,
       repoList: observable,
       gitRepoCommits: observable,
       linkTypes: observable,
@@ -48,10 +48,10 @@ class DocGenDataStore {
       setPipelineList:action,
       fetchPipelineRunHistory: action,
       setPipelineRunHistory: action,
-      fetchReleaseList:action,
-      setReleaseList:action,
-      fetchReleaseHistory:action,
-      setReleaseHistory: action,
+      fetchReleaseDefinitionList:action,
+      setReleaseDefinitionList:action,
+      fetchReleaseDefinitionHistory:action,
+      setReleaseDefinitionHistory: action,
       fetchTestPlans: action,
       setTestPlansList: action,
     });
@@ -78,8 +78,8 @@ class DocGenDataStore {
   gitRepoCommits = []; //commit history of a specific repo
   pipelineList = []; //list of all project pipelines
   pipelineRunHistory = []; //pipeline history of a specific pipeline
-  releaseList = []; //list of all project releaese
-  releaseHistory = []; //release history of a specific pipeline
+  releaseDefinitionList = []; //list of all project releaese Definitions
+  releaseDefinitionHistory = []; //release history of a specific Definition
 
 
   //for setting focused teamProject
@@ -120,7 +120,7 @@ class DocGenDataStore {
     this.fetchTestPlans();
     this.fetchGitRepoList();
     this.fetchPipelineList();
-    this.fetchReleaseList();
+    this.fetchReleaseDefinitionList();
   }
   //for fetching templatefiles list
   fetchTemplatesList() {
@@ -204,24 +204,24 @@ class DocGenDataStore {
     this.pipelineRunHistory = data.value || [];
   }
   //for fetching release list
-  fetchReleaseList(){
-    this.azureRestClient.getReleaseList(this.teamProject).then((data)=> {
-      this.setReleaseList(data);
+  fetchReleaseDefinitionList(){
+    this.azureRestClient.getReleaseDefinitionList(this.teamProject).then((data)=> {
+      this.setReleaseDefinitionList(data);
     })
   }
   //for setting release list
-  setReleaseList(data){
-    this.releaseList = data.value || [];
+  setReleaseDefinitionList(data){
+    this.releaseDefinitionList = data.value || [];
   }
   //for fetching release history
-  fetchReleaseHistory(releaseDefinitionId){
-    this.azureRestClient.getReleaseHistory(releaseDefinitionId,this.teamProject).then((data)=> {
-      this.setReleaseHistory(data);
+  fetchReleaseDefinitionHistory(releaseDefinitionId){
+    this.azureRestClient.getReleaseDefinitionHistory(releaseDefinitionId,this.teamProject).then((data)=> {
+      this.setReleaseDefinitionHistory(data);
     })
   }
   //for setting release history
-  setReleaseHistory(data){
-    this.releaseHistory = data.value || [];
+  setReleaseDefinitionHistory(data){
+    this.releaseDefinitionHistory = data.value || [];
   }
   //for fetching test plans
   fetchTestPlans() {

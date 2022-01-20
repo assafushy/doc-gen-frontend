@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 
@@ -18,7 +18,7 @@ const dropdownStyles = {
 
 const CommitDateSelector = ({
   contentControlTitle,
-  type,
+  skin,
   repoList,
   editingMode,
   addToDocumentRequestObject,
@@ -33,7 +33,29 @@ const CommitDateSelector = ({
 
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
 
+  useEffect(() => {
+    UpdateDocumentRequestObject();
+    });
 
+    function UpdateDocumentRequestObject(){
+      addToDocumentRequestObject(
+        {
+          type:"change-description-table",
+          title: contentControlTitle,
+          skin: skin,
+          headingLevel: contentHeadingLevel,
+          data: {
+            repoId:selectedRepo.key,
+            from:selectedStartDate,
+            to:selectedEndDate,
+            rangeType:"date",
+            linkTypeFilterArray:null
+          },
+        },
+        0
+        );
+    }
+    
   return (
     <div>
       <Dropdown

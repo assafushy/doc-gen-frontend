@@ -33,9 +33,9 @@ export default class AzuredevopsRestapi {
     return gitDataProvider.GetCommitsForRepo(teamProjectId,RepoId);
   }
 
-  async getReleaseList(teamProjectId = "") {
+  async getReleaseDefinitionList(teamProjectId = "") {
     let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
-    return pipelineDataProvider.GetAllReleases(teamProjectId);
+    return pipelineDataProvider.GetAllReleaseDefenitions(teamProjectId);
   }
 
   async getPipelineList(teamProjectId = "") {
@@ -43,7 +43,7 @@ export default class AzuredevopsRestapi {
     return pipelineDataProvider.GetAllPipelines(teamProjectId);
   }
 
-  async getReleaseHistory(definitionId = "",teamProjectId = ""){
+  async getReleaseDefinitionHistory(definitionId = "",teamProjectId = ""){
     let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
     return pipelineDataProvider.GetReleaseHistory(teamProjectId,definitionId);
   }

@@ -42,7 +42,7 @@ const ChangeTableSelector = observer(({
         <CommitRangeSelector
           store={store}
           contentControlTitle={contentControlTitle}
-          type={selectedType}
+          skin="change-table"
           repoList={store.repoList}
           gitRepoCommits={store.gitRepoCommits}
           editingMode={editingMode}
@@ -52,7 +52,7 @@ const ChangeTableSelector = observer(({
       {selectedType === "date" ? (
         <CommitDateSelector
         contentControlTitle={contentControlTitle}
-        type={selectedType}
+        skin="change-table"
         repoList={store.repoList}
         editingMode={editingMode}
         addToDocumentRequestObject={addToDocumentRequestObject}
@@ -62,7 +62,7 @@ const ChangeTableSelector = observer(({
         <PipelineSelector
         store={store}
         contentControlTitle={contentControlTitle}
-        type={selectedType}
+        skin="change-table"
         pipelineList={store.pipelineList}
         pipelineRunHistory={store.pipelineRunHistory}
         editingMode={editingMode}
@@ -73,9 +73,9 @@ const ChangeTableSelector = observer(({
         <ReleaseSelector
         store={store}
         contentControlTitle={contentControlTitle}
-        type={selectedType}
-        releaseList={store.releaseList}
-        releaseHistory={store.releaseHistory}
+        skin="change-table"
+        releaseDefinitionList={store.releaseDefinitionList}
+        releaseDefinitionHistory={store.releaseDefinitionHistory}
         editingMode={editingMode}
         addToDocumentRequestObject={addToDocumentRequestObject}
         />

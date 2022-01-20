@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 
@@ -11,7 +11,7 @@ const dropdownStyles = {
 const CommitRangeSelector = ({
   store,
   contentControlTitle,
-  type,
+  skin,
   repoList,
   gitRepoCommits,
   editingMode,
@@ -21,6 +21,29 @@ const CommitRangeSelector = ({
     key: "",
     text: "",
   });
+
+  useEffect(() => {
+    UpdateDocumentRequestObject();
+    });
+
+  function UpdateDocumentRequestObject(){
+    addToDocumentRequestObject(
+      {
+        type:"change-description-table",
+        title: contentControlTitle,
+        skin: skin,
+        headingLevel: contentHeadingLevel,
+        data: {
+          repoId:selectedRepo.key,
+          from:selectedStartCommit.key,
+          to:selectedEndCommit.key,
+          rangeType:"commitSha",
+          linkTypeFilterArray:null
+        },
+      },
+      0
+      );
+  }
 
   const [selectedStartCommit, setSelectedStartCommit] = useState({
     key: "",
@@ -66,7 +89,7 @@ const CommitRangeSelector = ({
         label= "Select start commit"
         value = {selectedStartCommit.key}
         options = {gitRepoCommits.map((commit) => {
-          return { key: commit.commitId, text: commit.comment}
+          return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
             })}
           styles={dropdownStyles}
           onChange={async (event, newValue) => {
@@ -80,7 +103,7 @@ const CommitRangeSelector = ({
         label= "Select end commit"
         value = {selectedEndCommit.key}
         options = {gitRepoCommits.map((commit) => {
-          return { key: commit.commitId, text: commit.comment}
+          return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
         })}
         styles={dropdownStyles}
         onChange={async (event, newValue) => {

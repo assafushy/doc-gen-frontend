@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 
@@ -12,7 +12,7 @@ const dropdownStyles = {
 const PipelineSelector = ({
   store,
   contentControlTitle,
-  type,
+  skin,
   pipelineList,
   pipelineRunHistory,
   editingMode,
@@ -22,6 +22,28 @@ const PipelineSelector = ({
     key: "",
     text: "",
   });
+
+  useEffect(() => {
+    UpdateDocumentRequestObject();
+    });
+
+  function UpdateDocumentRequestObject(){
+    addToDocumentRequestObject(
+      {
+        type:"change-description-table",
+        title: contentControlTitle,
+        skin: skin,
+        headingLevel: contentHeadingLevel,
+        data: {
+          from:selectedPipelineRunStart.key,
+          to:selectedPipelineRunEnd.key,
+          rangeType:"pipeline",
+          linkTypeFilterArray:null
+        },
+      },
+      0
+      );
+  }
 
   const [selectedPipelineRunStart, setSelectedPipelineRunStart] = useState({
     key: "",
@@ -66,12 +88,11 @@ const PipelineSelector = ({
               label= "Select start pipeline run"
               value = {selectedPipelineRunStart.key}
               options = {pipelineRunHistory.map((run) => {
-                return { key: run.Id, text: run.name}
+                return { key: run.id, text: run.name}
                   })}
                 styles={dropdownStyles}
                 onChange={async (event, newValue) => {
-                    setSelectedPipelineRunStart(newValue);
-                  }}
+                  setSelectedPipelineRunStart(newValue)}}
                 />
                 ) : null}      
         {selectedPipeline.key !== "" ? (
@@ -80,11 +101,11 @@ const PipelineSelector = ({
               label= "Select end pipeline run"
               value = {selectedPipelineRunEnd.key}
               options = {pipelineRunHistory.map((run) => {
-                return { key: run.Id, text: run.name}
+                return { key: run.id, text: run.name}
                   })}
                 styles={dropdownStyles}
                 onChange={async (event, newValue) => {
-                    setSelectedPipelineRunEnd(newValue);
+                    setSelectedPipelineRunEnd(newValue)
                   }}
                 />
                 ) : null}  
