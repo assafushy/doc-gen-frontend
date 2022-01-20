@@ -5,6 +5,8 @@ import Grid from "@material-ui/core/Grid";
 
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 
+import { PrimaryButton } from "office-ui-fabric-react";
+
 import TemplateSelector from "../../common/TemplateSelector";
 import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
@@ -72,7 +74,7 @@ const DocFormGenerator = observer(
               skin={formControl.skin}
               contentControlTitle={formControl.title}
               editingMode={false}
-              addToDocumentRequestObject={store.addToDocumentRequestObject}
+              addToDocumentRequestObject={store.addContentControlToDocument}
             />
           );
         default:
@@ -122,7 +124,14 @@ const DocFormGenerator = observer(
               })
             : null}
         </Grid>
-      </div>
+
+        <PrimaryButton
+          text="Send Request"
+          onClick={() => {
+            store.sendRequestToDocGen();
+          }}
+        />
+        </div>
     );
   }
 );
