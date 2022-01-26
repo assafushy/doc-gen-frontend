@@ -22,6 +22,7 @@ const CommitDateSelector = ({
   repoList,
   editingMode,
   addToDocumentRequestObject,
+  contentControlIndex
 }) => {
   const [selectedRepo, setSelectedRepo] = useState({
     key: "",
@@ -52,7 +53,7 @@ const CommitDateSelector = ({
             linkTypeFilterArray:null
           },
         },
-        0
+        contentControlIndex
         );
     }
     

@@ -16,6 +16,8 @@ const CommitRangeSelector = ({
   gitRepoCommits,
   editingMode,
   addToDocumentRequestObject,
+  contentControlIndex
+
 }) => {
   const [selectedRepo, setSelectedRepo] = useState({
     key: "",
@@ -41,7 +43,7 @@ const CommitRangeSelector = ({
           linkTypeFilterArray:null
         },
       },
-      0
+      contentControlIndex
       );
   }
 

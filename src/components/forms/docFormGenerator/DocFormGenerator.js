@@ -19,7 +19,7 @@ const dropdownStyles = {
 
 const DocFormGenerator = observer(
   ({ index, value, jsonDoc = { contentControls: [] }, store }) => {
-    const generateFormControls = (formControl) => {
+    const generateFormControls = (formControl,contentControlIndex) => {
       switch (formControl.skin) {
         case "test-std":
           return (
@@ -75,6 +75,7 @@ const DocFormGenerator = observer(
               contentControlTitle={formControl.title}
               editingMode={false}
               addToDocumentRequestObject={store.addContentControlToDocument}
+              contentControlIndex={contentControlIndex}
             />
           );
         default:
@@ -109,6 +110,7 @@ const DocFormGenerator = observer(
           onChange= {(event,newValue)=>{
             store.setSelectedTemplate(newValue)}}
           />
+
         <br />
         <Grid container spacing={3}>
           {jsonDoc.contentControls
@@ -118,7 +120,7 @@ const DocFormGenerator = observer(
                     <typography fontWeight="fontWeughtBold" fontSize={20} m={1}>
                       {contentControl.title}:
                     </typography>
-                    {generateFormControls(contentControl)}
+                    {generateFormControls(contentControl,key)}
                   </Grid>
                 );
               })

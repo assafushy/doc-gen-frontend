@@ -17,6 +17,7 @@ const ReleaseSelector = ({
   releaseDefinitionHistory,
   editingMode,
   addToDocumentRequestObject,
+  contentControlIndex
 }) => {
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const ReleaseSelector = ({
           linkTypeFilterArray:null
         },
       },
-      0
+      contentControlIndex
       );
   }
 

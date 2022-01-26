@@ -24,6 +24,7 @@ const ChangeTableSelector = observer(({
   contentControlTitle,
   editingMode,
   addToDocumentRequestObject,
+  contentControlIndex
 }) => {
   const [selectedType, setselectedType] = useState("");
 
@@ -47,6 +48,7 @@ const ChangeTableSelector = observer(({
           gitRepoCommits={store.gitRepoCommits}
           editingMode={editingMode}
           addToDocumentRequestObject={addToDocumentRequestObject}
+          contentControlIndex = {contentControlIndex}
         />
       ) : null}
       {selectedType === "date" ? (
@@ -56,6 +58,7 @@ const ChangeTableSelector = observer(({
         repoList={store.repoList}
         editingMode={editingMode}
         addToDocumentRequestObject={addToDocumentRequestObject}
+        contentControlIndex = {contentControlIndex}
         />
       ) :null }
       {selectedType === "pipeline" ? (
@@ -67,6 +70,7 @@ const ChangeTableSelector = observer(({
         pipelineRunHistory={store.pipelineRunHistory}
         editingMode={editingMode}
         addToDocumentRequestObject={addToDocumentRequestObject}
+        contentControlIndex = {contentControlIndex}
         />
       ) :null }
       {selectedType === "release" ? (
@@ -78,6 +82,7 @@ const ChangeTableSelector = observer(({
         releaseDefinitionHistory={store.releaseDefinitionHistory}
         editingMode={editingMode}
         addToDocumentRequestObject={addToDocumentRequestObject}
+        contentControlIndex = {contentControlIndex}
         />
       ) :null }
 

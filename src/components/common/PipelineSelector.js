@@ -17,6 +17,7 @@ const PipelineSelector = ({
   pipelineRunHistory,
   editingMode,
   addToDocumentRequestObject,
+  contentControlIndex
 }) => {
   const [selectedPipeline, setSelectedPipeline] = useState({
     key: "",
@@ -41,7 +42,7 @@ const PipelineSelector = ({
           linkTypeFilterArray:null
         },
       },
-      0
+      contentControlIndex
       );
   }
 
