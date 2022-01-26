@@ -7,6 +7,7 @@ import {
   getBucketFileList,
   getJSONContentFromFile,
   sendDocumentTogenerator,
+  createIfBucketDoesentExsist,
 } from "../store/data/docManagerApi";
 
 const azureDevopsUrl = cookies.getItem("azuredevopsUrl");
@@ -261,23 +262,24 @@ class DocGenDataStore {
     console.log(contentControlObject);
   };
   sendRequestToDocGen() {
+    createIfBucketDoesentExsist((this.teamProjectName));
     let docReq = this.requestJson;
     console.log(docReq);
     sendDocumentTogenerator(docReq);
   }
   get requestJson() {
+    let tempFileName = new Date().toISOString().substring(0, 19).replace('T', '-');
     return {
       tfsCollectionUri:azureDevopsUrl,
       PAT:azuredevopsPat,
       teamProjectName: this.teamProjectName,
       templateFile: this.selectedTemplate.key,
       uploadProperties:{
-        bucketName: "docgentestbucket",
-        subDirectoryInBucket:"docs",
-        fileName: "firstFrontEndDoc",
-        AwsAccessKeyId: "your-root-user",
-        AwsSecretAccessKey: "your-root-password",
-        Region: "ap-southeast-1"
+        bucketName: this.teamProjectName, 
+        fileName: tempFileName,
+        AwsAccessKeyId: C.AwsAccessKeyId,  
+        AwsSecretAccessKey: C.AwsSecretAccessKey, 
+        Region: C.AwsRegion,
         },
       contentControls: this.contentControls,
     };
