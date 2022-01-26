@@ -2,6 +2,8 @@ import axios from "axios";
 import C from "../constants";
 import { v4 as uuidv4 } from "uuid";
 
+
+
 var Minio = require("minio");
 
 const headers = {
@@ -14,11 +16,11 @@ const headers = {
 export const getBucketFileList = async (bucketName) => {
   return new Promise((resolve, reject) => {
     const s3Client = new Minio.Client({
-      endPoint: C.minio_url,
+      endPoint: C.minio_endPoint,
       port: 9000,
       useSSL: false,
-      accessKey: "your-root-user",
-      secretKey: "your-root-password",
+      accessKey: C.AwsAccessKeyId,
+      secretKey: C.AwsSecretAccessKey,
     });
     try {
       let objects = [];
@@ -45,11 +47,11 @@ export const getBucketFileList = async (bucketName) => {
 export const getJSONContentFromFile = async (bucketName, fileName) => {
   return new Promise((resolve, reject) => {
     const s3Client = new Minio.Client({
-      endPoint: C.minio_url,
+      endPoint: C.minio_endPoint,
       port: 9000,
       useSSL: false,
-      accessKey: "your-root-user",
-      secretKey: "your-root-password",
+      accessKey: C.AwsAccessKeyId,
+      secretKey: C.AwsSecretAccessKey,
     });
     let miniData = "";
     s3Client.getObject(bucketName, fileName, function (err, dataStream) {
@@ -73,6 +75,50 @@ export const getJSONContentFromFile = async (bucketName, fileName) => {
     });
   });
 };
+export const createIfBucketDoesentExsist = async (bucketName) => {
+  const s3Client = new Minio.Client({
+    endPoint: C.minio_endPoint,
+    port: 9000,
+    useSSL: false,
+    accessKey: C.AwsAccessKeyId,
+    secretKey: C.AwsSecretAccessKey,
+  });
+  try{
+    s3Client.bucketExists(bucketName).then((exsistRes) => {
+      if(exsistRes)
+      {
+        console.log(`Bucket - ${bucketName} exsists.`);
+      }
+      else{
+        let policy = {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Sid": "PublicRead",
+                  "Effect": "Allow",
+                  "Principal": "*",
+                  "Action": [
+                      "s3:GetObject",
+                      "s3:GetObjectVersion"
+                  ],
+                  "Resource": [
+                      `arn:aws:s3:::${bucketName}/*`
+                  ]
+              }
+          ]
+        }
+        s3Client.makeBucket(bucketName, C.AwsRegion).then(
+          s3Client.setBucketPolicy(bucketName,JSON.stringify(policy))
+        );
+        console.log(`Bucket ${bucketName} created successfully in "${C.AwsRegion}".`)
+}
+    });
+  }
+  catch(err)
+  {
+    console.log(err);
+  }
+}
 
 export const sendDocumentTogenerator = async (docJson) => {
   try {

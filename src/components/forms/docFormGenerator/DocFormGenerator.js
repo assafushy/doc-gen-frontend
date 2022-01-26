@@ -5,10 +5,13 @@ import Grid from "@material-ui/core/Grid";
 
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 
+import { PrimaryButton } from "office-ui-fabric-react";
+
 import TemplateSelector from "../../common/TemplateSelector";
 import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
 import TraceTableSelector from "../../common/TraceTableSelector";
+import ChangeTableSelector from "../../common/ChangeTableSelector";
 
 const dropdownStyles = {
   dropdown: { width: 300 },
@@ -16,7 +19,7 @@ const dropdownStyles = {
 
 const DocFormGenerator = observer(
   ({ index, value, jsonDoc = { contentControls: [] }, store }) => {
-    const generateFormControls = (formControl) => {
+    const generateFormControls = (formControl,contentControlIndex) => {
       switch (formControl.skin) {
         case "test-std":
           return (
@@ -63,6 +66,18 @@ const DocFormGenerator = observer(
               linkTypeFilterArray={null}
             />
           );
+          case "change-table":
+          return (
+            <ChangeTableSelector
+              store={store}
+              type={formControl.type}
+              skin={formControl.skin}
+              contentControlTitle={formControl.title}
+              editingMode={false}
+              addToDocumentRequestObject={store.addContentControlToDocument}
+              contentControlIndex={contentControlIndex}
+            />
+          );
         default:
           return null;
       }
@@ -79,7 +94,7 @@ const DocFormGenerator = observer(
             return { key: teamProject.id, text: teamProject.name };
           })}
           styles={dropdownStyles}
-          onChange={(event, newValue) => {
+          onChange={async (event, newValue) => {
             store.setTeamProject(newValue.key,newValue.text);
           }}
         />
@@ -105,13 +120,20 @@ const DocFormGenerator = observer(
                     <typography fontWeight="fontWeughtBold" fontSize={20} m={1}>
                       {contentControl.title}:
                     </typography>
-                    {generateFormControls(contentControl)}
+                    {generateFormControls(contentControl,key)}
                   </Grid>
                 );
               })
             : null}
         </Grid>
-      </div>
+
+        <PrimaryButton
+          text="Send Request"
+          onClick={() => {
+            store.sendRequestToDocGen();
+          }}
+        />
+        </div>
     );
   }
 );

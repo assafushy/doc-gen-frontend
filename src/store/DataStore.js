@@ -2,10 +2,12 @@ import { observable, action, makeObservable, computed } from "mobx";
 import { enableLogging } from "mobx-logger";
 import RestApi from "./actions/AzuredevopsRestapi";
 import cookies from "js-cookies";
+import C from "./constants";
 import {
   getBucketFileList,
   getJSONContentFromFile,
   sendDocumentTogenerator,
+  createIfBucketDoesentExsist,
 } from "../store/data/docManagerApi";
 
 const azureDevopsUrl = cookies.getItem("azuredevopsUrl");
@@ -24,6 +26,12 @@ class DocGenDataStore {
       teamProjectsList: observable,
       templateList: observable,
       testPlansList: observable,
+      pipelineList:observable,
+      pipelineRunHistory:observable,
+      releaseDefinitionList:observable,
+      releaseDefinitionHistory:observable,
+      repoList: observable,
+      gitRepoCommits: observable,
       linkTypes: observable,
       documents: observable,
       requestJson: computed,
@@ -33,6 +41,18 @@ class DocGenDataStore {
       setSelectedTemplate: action,
       fetchSharedQueries: action,
       setSharedQueries: action,
+      fetchGitRepoList: action,
+      setGitRepoList: action,
+      fetchGitRepoCommits: action,
+      setGitRepoCommits: action,
+      fetchPipelineList:action,
+      setPipelineList:action,
+      fetchPipelineRunHistory: action,
+      setPipelineRunHistory: action,
+      fetchReleaseDefinitionList:action,
+      setReleaseDefinitionList:action,
+      fetchReleaseDefinitionHistory:action,
+      setReleaseDefinitionHistory: action,
       fetchTestPlans: action,
       setTestPlansList: action,
     });
@@ -55,6 +75,13 @@ class DocGenDataStore {
   linkTypesFilter = []; // list of selected links to filter by
   testPlansList = []; // list of testplans
   documents = []; //list of all project documents
+  repoList = []; //list of all project repos
+  gitRepoCommits = []; //commit history of a specific repo
+  pipelineList = []; //list of all project pipelines
+  pipelineRunHistory = []; //pipeline history of a specific pipeline
+  releaseDefinitionList = []; //list of all project releaese Definitions
+  releaseDefinitionHistory = []; //release history of a specific Definition
+
 
   //for setting focused teamProject
   setDocumentTitle(documentTitle) {
@@ -92,6 +119,9 @@ class DocGenDataStore {
     this.fetchDocuments();
     this.fetchSharedQueries();
     this.fetchTestPlans();
+    this.fetchGitRepoList();
+    this.fetchPipelineList();
+    this.fetchReleaseDefinitionList();
   }
   //for fetching templatefiles list
   fetchTemplatesList() {
@@ -121,6 +151,7 @@ class DocGenDataStore {
   //for setting selected template
   setSelectedTemplate(templateObject) {
     this.selectedTemplate = templateObject;
+    this.selectedTemplate.key = `${C.minio_url}/templates/${templateObject.text}`// add constants, default template buckets
   }
   //for fetching shared quries
   fetchSharedQueries() {
@@ -131,6 +162,67 @@ class DocGenDataStore {
   //for setting shared queries
   setSharedQueries(data) {
     this.sharedQueries = data;
+  }
+  //for fetching repo list
+  fetchGitRepoList(){
+    this.azureRestClient.getGitRepoList(this.teamProject).then((data)=> {
+      this.setGitRepoList(data);
+    })
+  }
+  // for setting repo list
+  setGitRepoList(data){
+    this.repoList = data.value || [];
+  }
+  //for fetching git repo commits
+  fetchGitRepoCommits(RepoId){
+      this.azureRestClient.getGitRepoCommits(RepoId,this.teamProject).then((data)=> {
+        this.setGitRepoCommits(data);
+    })
+  }
+  //for setting git repo commits
+  setGitRepoCommits(data){
+    this.gitRepoCommits = data.value || [];
+    }
+  //for fetching pipeline list
+  fetchPipelineList(){
+    this.azureRestClient.getPipelineList(this.teamProject).then((data)=> {
+      this.setPipelineList(data);
+    })
+  }
+  //for setting pipeline list
+  setPipelineList(data){
+    this.pipelineList = data.value || [];
+  }
+  //for fetching pipeline run history
+  fetchPipelineRunHistory(pipelineId){
+    this.azureRestClient.getPipelineRunHistory(pipelineId,this.teamProject).then((data)=> {
+      this.setPipelineRunHistory(data)
+      console.log(data)
+    })
+  }
+  //for setting pipeline run history 
+  setPipelineRunHistory(data){
+    this.pipelineRunHistory = data.value || [];
+  }
+  //for fetching release list
+  fetchReleaseDefinitionList(){
+    this.azureRestClient.getReleaseDefinitionList(this.teamProject).then((data)=> {
+      this.setReleaseDefinitionList(data);
+    })
+  }
+  //for setting release list
+  setReleaseDefinitionList(data){
+    this.releaseDefinitionList = data.value || [];
+  }
+  //for fetching release history
+  fetchReleaseDefinitionHistory(releaseDefinitionId){
+    this.azureRestClient.getReleaseDefinitionHistory(releaseDefinitionId,this.teamProject).then((data)=> {
+      this.setReleaseDefinitionHistory(data);
+    })
+  }
+  //for setting release history
+  setReleaseDefinitionHistory(data){
+    this.releaseDefinitionHistory = data.value || [];
   }
   //for fetching test plans
   fetchTestPlans() {
@@ -162,23 +254,33 @@ class DocGenDataStore {
     }
     //zeroing down the filter object
     this.linkTypesFilter = [];
-
-    if (arrayIndex) {
+    if (arrayIndex !== null) {
       this.contentControls[arrayIndex] = contentControlObject;
     } else {
       this.contentControls.push(contentControlObject);
     }
+    console.log(contentControlObject);
   };
   sendRequestToDocGen() {
+    createIfBucketDoesentExsist((this.teamProjectName));
     let docReq = this.requestJson;
     console.log(docReq);
     sendDocumentTogenerator(docReq);
   }
   get requestJson() {
+    let tempFileName = new Date().toISOString().substring(0, 19).replace('T', '-');
     return {
-      documentTitle: this.documentTitle,
-      teamProjectName: this.teamProject,
+      tfsCollectionUri:azureDevopsUrl,
+      PAT:azuredevopsPat,
+      teamProjectName: this.teamProjectName,
       templateFile: this.selectedTemplate.key,
+      uploadProperties:{
+        bucketName: this.teamProjectName, 
+        fileName: tempFileName,
+        AwsAccessKeyId: C.AwsAccessKeyId,  
+        AwsSecretAccessKey: C.AwsSecretAccessKey, 
+        Region: C.AwsRegion,
+        },
       contentControls: this.contentControls,
     };
   }

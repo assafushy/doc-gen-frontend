@@ -23,7 +23,36 @@ export default class AzuredevopsRestapi {
     let testDataProvider = await this.azureRestApi.getTestDataProvider();
     return testDataProvider.GetTestPlans(teamProjectId);
   }
+  async getGitRepoList(teamProjectId = "") {
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetTeamProjectGitReposList(teamProjectId);
+  }
 
+  async getGitRepoCommits(RepoId = "",teamProjectId = "") {
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetCommitsForRepo(teamProjectId,RepoId);
+  }
+
+  async getReleaseDefinitionList(teamProjectId = "") {
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetAllReleaseDefenitions(teamProjectId);
+  }
+
+  async getPipelineList(teamProjectId = "") {
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetAllPipelines(teamProjectId);
+  }
+
+  async getReleaseDefinitionHistory(definitionId = "",teamProjectId = ""){
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetReleaseHistory(teamProjectId,definitionId);
+  }
+
+  async getPipelineRunHistory(pipelineId = "",teamProjectId = ""){
+    let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
+    return pipelineDataProvider.GetPipelineRunHistory(teamProjectId,pipelineId);
+  }
+  
   async getCollectionLinkTypes() {
     try {
       let mangementDataProvider = this.azureRestApi.getMangementDataProvider();
