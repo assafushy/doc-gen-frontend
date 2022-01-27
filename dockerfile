@@ -1,10 +1,31 @@
-# build environment
-FROM node:slim
-WORKDIR /app
-COPY package.json /app/package.json
+# stage1 as builder
+FROM node:14.18-alpine3.15 as builder
 
-RUN npm install --silent
-RUN npm install react-scripts@3.0.1 -g --silent
-COPY . /app
-ENTRYPOINT ["/bin/bash","./src/deployment/env-uri-init.sh"]
+WORKDIR /react-ui
+
+# copy the package.json to install dependencies
+COPY package.json ./
+
+# Install the dependencies and make the folder
+RUN npm install
+
+COPY . .
+
+# Build the project and copy the files
+RUN npm run build
+
+
+FROM nginx:alpine
+
+## Remove default nginx index page
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy from the stahg 1
+COPY --from=builder /react-ui/build /usr/share/nginx/html
+COPY --from=builder /react-ui/deployment /tmp/deployment
+
+EXPOSE 3000 80
+
+# ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/bin/sh","/tmp/deployment/env-uri-init.sh"]
 # CMD ["npm", "start"]
