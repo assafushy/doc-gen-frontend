@@ -7,7 +7,7 @@ COPY package.json ./
 RUN npm install
 COPY . .
 RUN  apk add dos2unix --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
-RUN dos2unix  /react-ui/src/deployment /tmp/deployment/env-uri-init.sh
+RUN dos2unix  /react-ui/src/deployment/env-uri-init.sh
 # Build the project and copy the files
 RUN npm run build
 
@@ -18,7 +18,5 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy from the stahg 1
 COPY --from=builder /react-ui/build /usr/share/nginx/html
 COPY --from=builder /react-ui/src/deployment /tmp/deployment
-EXPOSE 3000 80
-# ENTRYPOINT ["nginx", "-g", "daemon off;"]
+EXPOSE 80
 ENTRYPOINT ["/bin/sh","/tmp/deployment/env-uri-init.sh"]
-# CMD ["npm", "start"]
