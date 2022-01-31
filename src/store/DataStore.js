@@ -2,7 +2,6 @@ import { observable, action, makeObservable, computed } from "mobx";
 import { enableLogging } from "mobx-logger";
 import RestApi from "./actions/AzuredevopsRestapi";
 import cookies from "js-cookies";
-import C from "./constants";
 import {
   getBucketFileList,
   getJSONContentFromFile,

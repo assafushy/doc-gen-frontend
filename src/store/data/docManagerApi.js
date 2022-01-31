@@ -34,8 +34,7 @@ export const createIfBucketDoesentExsist = async (bucketName) => {
   let data = { bucketName };
   try {
     url = `${C.jsonDocument_url}/minio/createBucket`;
-    let res = await makeRequest(url, "post", data, headers);
-    return res;
+    return await makeRequest(url, "post", data, headers);
   } catch (e) {}
 };
 
