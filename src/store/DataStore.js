@@ -2,7 +2,6 @@ import { observable, action, makeObservable, computed } from "mobx";
 import { enableLogging } from "mobx-logger";
 import RestApi from "./actions/AzuredevopsRestapi";
 import cookies from "js-cookies";
-import C from "./constants";
 import {
   getBucketFileList,
   getJSONContentFromFile,
@@ -151,7 +150,6 @@ class DocGenDataStore {
   //for setting selected template
   setSelectedTemplate(templateObject) {
     this.selectedTemplate = templateObject;
-    this.selectedTemplate.key = `${C.minio_url}/templates/${templateObject.text}`// add constants, default template buckets
   }
   //for fetching shared quries
   fetchSharedQueries() {
@@ -276,10 +274,7 @@ class DocGenDataStore {
       templateFile: this.selectedTemplate.key,
       uploadProperties:{
         bucketName: this.teamProjectName, 
-        fileName: tempFileName,
-        AwsAccessKeyId: C.AwsAccessKeyId,  
-        AwsSecretAccessKey: C.AwsSecretAccessKey, 
-        Region: C.AwsRegion,
+        fileName: tempFileName
         },
       contentControls: this.contentControls,
     };
@@ -299,6 +294,3 @@ enableLogging(config);
 var store = new DocGenDataStore();
 
 export default store;
-
-// 53f0f596-fe4c-48b2-b661-b696f7fb5a42
-// c8fa0686-bbde-412b-806b-c59677664da2
