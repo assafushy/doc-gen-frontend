@@ -5,7 +5,8 @@ echo replace MINIO-URL-PLACEHOLDER
 find '/usr/share/nginx/html/static/js' -name '*.js' -exec sed -i 's,MINIO-URL-PLACEHOLDER,'"${MINIO-URL-PLACEHOLDER}"',g' {} \;
       
 echo replace BACKEND-URL-PLACEHOLDER-ContentControl
-find '/usr/share/nginx/html/static/js' -name '*.js' -exec sed -i 's,BACKEND-URL-PLACEHOLDER-ContentControl,'"${BACKEND-URL-PLACEHOLDER-ContentControl}"',g' {} \;
+echo "$BACKEND_URL_PLACEHOLDER_ContentControl"
+find '/usr/share/nginx/html/static/js' -name '*.js' -exec sed -i 's,BACKEND-URL-PLACEHOLDER-ContentControl,'"$BACKEND_URL_PLACEHOLDER_ContentControl"',g' {} \;
 
 echo replace MINIO-ACCESS-ID-PLACEHOLDER
 find '/usr/share/nginx/html/static/js' -name '*.js' -exec sed -i 's,MINIO-ACCESS-ID-PLACEHOLDER,'"${MINIO-ACCESS-ID-PLACEHOLDER}"',g' {} \;
