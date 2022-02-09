@@ -104,7 +104,7 @@ const DocFormGenerator = observer(
           label="Select a Template"
           value={store.selectedTemplate.name}
           options={store.templateList.map((template)=> {
-                return { key: template.key, text: template.name };
+                return { url: template.url, text: template.name };
           })}
           styles={dropdownStyles}
           onChange= {(event,newValue)=>{
