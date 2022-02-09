@@ -230,7 +230,7 @@ class DocGenDataStore {
   }
   //for fetching documents
   fetchDocuments() {
-    getBucketFileList(this.teamProjectName.toLowerCase()).then((data) => {
+    getBucketFileList(this.teamProjectName.toLowerCase(),true).then((data) => {
       this.documents = data;
     });
   }
@@ -271,7 +271,7 @@ class DocGenDataStore {
       tfsCollectionUri:azureDevopsUrl,
       PAT:azuredevopsPat,
       teamProjectName: this.teamProjectName,
-      templateFile: this.selectedTemplate.key,
+      templateFile: this.selectedTemplate.url,
       uploadProperties:{
         bucketName: this.teamProjectName, 
         fileName: tempFileName

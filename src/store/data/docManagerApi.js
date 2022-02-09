@@ -11,10 +11,10 @@ const headers = {
   },
 };
 
-export const getBucketFileList = async (bucketName) => {
+export const getBucketFileList = async (bucketName,isExternalUrl = false) => {
   let url;
   try {
-    url = `${C.jsonDocument_url}/minio/bucketFileList/${bucketName}`;
+    url = `${C.jsonDocument_url}/minio/bucketFileList/${bucketName}?isExternalUrl=${isExternalUrl}`;
     let res = await makeRequest(url, undefined,undefined,headers);
     return res.bucketFileList;
   } catch (e) {}
