@@ -25,6 +25,7 @@ class DocGenDataStore {
       teamProjectsList: observable,
       templateList: observable,
       testPlansList: observable,
+      testSuiteList: observable,
       pipelineList:observable,
       pipelineRunHistory:observable,
       releaseDefinitionList:observable,
@@ -54,6 +55,8 @@ class DocGenDataStore {
       setReleaseDefinitionHistory: action,
       fetchTestPlans: action,
       setTestPlansList: action,
+      fetchTestSuitesList: action,
+      setTestSuitesList: action,
     });
     this.fetchDocTemplates();
     this.fetchTeamProjects();
@@ -73,6 +76,7 @@ class DocGenDataStore {
   linkTypes = []; // list of link types
   linkTypesFilter = []; // list of selected links to filter by
   testPlansList = []; // list of testplans
+  testSuiteList = []; // list of testsuites
   documents = []; //list of all project documents
   repoList = []; //list of all project repos
   gitRepoCommits = []; //commit history of a specific repo
@@ -228,16 +232,35 @@ class DocGenDataStore {
       this.setTestPlansList(data);
     });
   }
-  //for fetching documents
-  fetchDocuments() {
-    getBucketFileList(this.teamProjectName.toLowerCase(),true).then((data) => {
-      this.documents = data;
-    });
-  }
+
   //setting the testplans array
   setTestPlansList(data) {
     this.testPlansList = data.value || [];
   }
+
+  fetchTestSuitesList(testPlanId) {
+    this.azureRestClient.getTestSuiteByPlanList(this.teamProject,testPlanId).then((data) => {
+      data.sort(function (a,b){
+        return a.parent - b.parent;
+      });
+      this.setTestSuitesList(data);
+    })
+  }
+
+  setTestSuitesList(data) {
+    this.testSuiteList = data || [];
+  }
+
+  //for fetching documents
+  fetchDocuments() {
+    getBucketFileList(this.teamProjectName.toLowerCase(),true).then((data) => {
+      data.sort(function(a,b){
+        return new Date(b.lastModified) - new Date(a.lastModified);
+      });
+      this.documents = data;
+    });
+  }
+
   //add a content control object to the doc object
   addContentControlToDocument = (contentControlObject, arrayIndex = null) => {
     //adding link types filterss to contetn control
@@ -266,7 +289,7 @@ class DocGenDataStore {
     sendDocumentTogenerator(docReq);
   }
   get requestJson() {
-    let tempFileName = new Date().toISOString().substring(0, 19).replace('T', '-');
+    let tempFileName = `${this.teamProjectName}-${new Date().toISOString().substring(0, 19).replace('T', '-')}`
     return {
       tfsCollectionUri:azureDevopsUrl,
       PAT:azuredevopsPat,

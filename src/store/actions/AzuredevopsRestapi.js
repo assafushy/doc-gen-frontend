@@ -10,10 +10,12 @@ export default class AzuredevopsRestapi {
       await this.azureRestApi.getMangementDataProvider();
     return managmentDataProvider.GetProjects();
   }
+
   async getSharedQueries(teamProjectId = null) {
     let ticketDataProvider = await this.azureRestApi.getTicketsDataProvider();
     return ticketDataProvider.GetSharedQueries(teamProjectId, "");
   }
+
   async getQueryResults(queryId = null, teamProjectId = "") {
     let ticketDataProvider = await this.azureRestApi.getTicketsDataProvider();
     return ticketDataProvider.GetQueryResultById(queryId, teamProjectId);
@@ -22,6 +24,11 @@ export default class AzuredevopsRestapi {
   async getTestPlansList(teamProjectId = "") {
     let testDataProvider = await this.azureRestApi.getTestDataProvider();
     return testDataProvider.GetTestPlans(teamProjectId);
+  }
+
+  async getTestSuiteByPlanList(teamProjectId = "",testPlanId = "") {
+    let testDataProvider = await this.azureRestApi.getTestDataProvider();
+    return testDataProvider.GetTestSuitesByPlan(teamProjectId,testPlanId,true);
   }
   async getGitRepoList(teamProjectId = "") {
     let gitDataProvider = await this.azureRestApi.getGitDataProvider();
