@@ -24,12 +24,16 @@ const DocFormGenerator = observer(
         case "test-std":
           return (
             <TestContentSelector
+              store={store}
               contentControlTitle={formControl.title}
-              type={formControl.data.type}
+              type={formControl.type}
               skin={formControl.skin}
               testPlansList={store.testPlansList}
+              testSuiteList={store.testSuiteList}
+              fetchTestSuitesList={store.fetchTestSuitesList}
               editingMode={false}
               addToDocumentRequestObject={store.addContentControlToDocument}
+              contentControlIndex={contentControlIndex}
             />
           );
         case "trace-table":
