@@ -23,6 +23,12 @@ export const contentTypeOptions = [
     skinType: "test-std",
     dataType: "test",
   },
+  {
+    key: "change-table",
+    text: "Change Based Table",
+    skinType: "change-table",
+    dataType: "change-table"
+  }
 ];
 
 export const headingLevelOptions = [

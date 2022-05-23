@@ -11,6 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
 import TraceTableSelector from "../../common/TraceTableSelector";
+import ChangeTableSelector from "../../common/ChangeTableSelector";
 import fileDownload from "react-file-download";
 
 const dropdownStyles = {
@@ -19,11 +20,10 @@ const dropdownStyles = {
 
 const DeveloperForm = observer(({ store }) => {
   const [contentControlTitle, setContentControlTitle] = useState(null);
-  const [contentControlType, setContentControlType] = useState("queryTable");
+  const [contentControlType, setContentControlType] = useState("");
   const [contentControlSkin, setContentControlSkin] = useState("");
 
   const addToDocumentRequestObject = (contentControlObject) => {
-    console.log(contentControlObject);
     store.addContentControlToDocument(contentControlObject);
   };
 
@@ -47,9 +47,8 @@ const DeveloperForm = observer(({ store }) => {
               return { key: teamProject.id, text: teamProject.name };
             })}
             styles={dropdownStyles}
-            onChange={(event, newValue) => {
+            onChange={async (event, newValue) => {
               store.setTeamProject(newValue.key, newValue.text);
-              store.fetchDocuments();
             }}
           />
           <Dropdown
@@ -57,7 +56,7 @@ const DeveloperForm = observer(({ store }) => {
             label="Select a Template"
             value={store.selectedTemplate.name}
             options={store.templateList.map((template) => {
-              return { key: template.url, text: template.name };
+              return { url: template.url, text: template.name };
             })}
             styles={dropdownStyles}
             onChange={(event, newValue) => {
@@ -87,14 +86,15 @@ const DeveloperForm = observer(({ store }) => {
               {contentControlType === "test" &&
               contentControlSkin === "test-std" ? (
                 <TestContentSelector
-                  contentControlTitle={contentControlTitle}
-                  teamProjectName={store.teamProject}
-                  type={contentControlType}
-                  skin={contentControlSkin}
-                  testPlansList={store.testPlansList}
-                  contentControlArrayCell={null}
-                  editingMode={true}
-                  addToDocumentRequestObject={addToDocumentRequestObject}
+                store={store}
+                contentControlTitle={contentControlTitle}
+                type={contentControlType}
+                skin={contentControlSkin}
+                testPlansList={store.testPlansList}
+                testSuiteList={store.testSuiteList}
+                fetchTestSuitesList={store.fetchTestSuitesList}
+                editingMode={true}
+                addToDocumentRequestObject={addToDocumentRequestObject}
                 />
               ) : null}
               {contentControlType === "query" ? (
@@ -117,6 +117,16 @@ const DeveloperForm = observer(({ store }) => {
                   editingMode={true}
                   addToDocumentRequestObject={addToDocumentRequestObject}
                 />
+              ) : null}
+              {contentControlSkin === "change-table" ? (
+                <ChangeTableSelector
+                  store={store}
+                  type={contentControlType}
+                  skin={contentControlSkin}
+                  contentControlTitle={contentControlTitle}
+                  editingMode={true}
+                  addToDocumentRequestObject={addToDocumentRequestObject}
+              /> 
               ) : null}
             </div>
           ) : null}

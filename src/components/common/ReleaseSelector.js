@@ -1,7 +1,6 @@
 import React, { useState , useEffect} from "react";
-
+import { PrimaryButton } from "office-ui-fabric-react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 
 
@@ -21,8 +20,10 @@ const ReleaseSelector = ({
 }) => {
 
   useEffect(() => {
-    UpdateDocumentRequestObject();
-    });
+    if (editingMode === false){  
+      UpdateDocumentRequestObject();
+    }
+  });
   
   function UpdateDocumentRequestObject(){
     addToDocumentRequestObject(
@@ -115,7 +116,14 @@ const ReleaseSelector = ({
                 ) : null}  
       <br />
       <br />
-
+      {editingMode ? (
+        <PrimaryButton
+          text="Add Content To Document"
+          onClick={() => {
+            UpdateDocumentRequestObject()
+          }}
+        />
+      ) : null}
     </div>
   );
 };
