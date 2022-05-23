@@ -41,11 +41,13 @@ const TraceTableSelector = ({
       />
       {selectedType === "test" ? (
         <TestContentSelector
+          store={store}
           contentControlTitle={contentControlTitle}
-          teamProjectName={store.teamProjectName}
           type={selectedType}
           skin="trace-table"
           testPlansList={store.testPlansList}
+          testSuiteList={store.testSuiteList}
+          fetchTestSuitesList={store.fetchTestSuitesList}
           contentControlArrayCell={null}
           editingMode={editingMode}
           addToDocumentRequestObject={addToDocumentRequestObject}
