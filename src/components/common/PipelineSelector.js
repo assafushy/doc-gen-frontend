@@ -25,8 +25,10 @@ const PipelineSelector = ({
   });
 
   useEffect(() => {
-    UpdateDocumentRequestObject();
-    });
+    if (editingMode === false){  
+      UpdateDocumentRequestObject();
+    }
+  });
 
   function UpdateDocumentRequestObject(){
     addToDocumentRequestObject(

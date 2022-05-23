@@ -21,8 +21,10 @@ const ReleaseSelector = ({
 }) => {
 
   useEffect(() => {
-    UpdateDocumentRequestObject();
-    });
+    if (editingMode === false){  
+      UpdateDocumentRequestObject();
+    }
+  });
   
   function UpdateDocumentRequestObject(){
     addToDocumentRequestObject(

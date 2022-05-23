@@ -25,8 +25,10 @@ const CommitRangeSelector = ({
   });
 
   useEffect(() => {
-    UpdateDocumentRequestObject();
-    });
+    if (editingMode === false){  
+      UpdateDocumentRequestObject();
+    }
+  });
 
   function UpdateDocumentRequestObject(){
     addToDocumentRequestObject(

@@ -40,10 +40,11 @@ const TestContentSelector = ({
   const [isSuiteSpecific, setIsSuiteSpecific] = useState(false);
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
 
-
   useEffect(() => {
-    UpdateDocumentRequestObject();
-    });
+    if (editingMode === false){  
+      UpdateDocumentRequestObject();
+    }
+  });
 
   function UpdateDocumentRequestObject(){
     let testSuiteIdList = undefined

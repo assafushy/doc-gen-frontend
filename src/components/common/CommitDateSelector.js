@@ -35,8 +35,10 @@ const CommitDateSelector = ({
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
 
   useEffect(() => {
-    UpdateDocumentRequestObject();
-    });
+    if (editingMode === false){  
+      UpdateDocumentRequestObject();
+    }
+  });
 
     function UpdateDocumentRequestObject(){
       addToDocumentRequestObject(
