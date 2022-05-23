@@ -1,7 +1,6 @@
 import React, { useState , useEffect} from "react";
-
+import { PrimaryButton } from "office-ui-fabric-react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 
 import {
@@ -103,6 +102,15 @@ const CommitDateSelector = ({
         </MuiPickersUtilsProvider>
       <br />
       <br />
+
+      {editingMode ? (
+        <PrimaryButton
+          text="Add Content To Document"
+          onClick={() => {
+            UpdateDocumentRequestObject()
+          }}
+        />
+      ) : null}
     </div>
   );
 };

@@ -1,7 +1,5 @@
 import React, { useState , useEffect} from "react";
-
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import FormContorlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -157,20 +155,7 @@ const TestContentSelector = ({
         <PrimaryButton
           text="Add Content To Document"
           onClick={() => {
-            addToDocumentRequestObject(
-              {
-                title: contentControlTitle,
-                skin: skin,
-                headingLevel: contentHeadingLevel,
-                data: {
-                  type: type,
-                  planId: selectedTestPlan.key,
-                  includeAttachments: includeAttachments,
-                },
-              },
-              null,
-              linkTypeFilterArray
-            );
+            UpdateDocumentRequestObject();
           }}
         />
       ) : null}
