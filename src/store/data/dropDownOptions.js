@@ -21,13 +21,13 @@ export const contentTypeOptions = [
     key: "test-std",
     text: "Test Based STD Layout",
     skinType: "test-std",
-    dataType: "test",
+    dataType: "test-description",
   },
   {
     key: "change-table",
     text: "Change Based Table",
     skinType: "change-table",
-    dataType: "change-table"
+    dataType: "change-description-table"
   }
 ];
 

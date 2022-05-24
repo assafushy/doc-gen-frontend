@@ -69,6 +69,7 @@ class DocGenDataStore {
   teamProjectsList = [];
   teamProject = "";
   teamProjectName = "";
+  ProjectBucketName = "";
   templateList = [];
   contentControls = [];
   selectedTemplate = { key: "", name: "" };
@@ -119,6 +120,12 @@ class DocGenDataStore {
   setTeamProject(teamProjectId, teamProjectName) {
     this.teamProject = teamProjectId;
     this.teamProjectName = teamProjectName;
+    this.ProjectBucketName = teamProjectName.toLowerCase();
+    this.ProjectBucketName = this.ProjectBucketName.replace('_', "-");
+    this.ProjectBucketName = this.ProjectBucketName.replace(/[^a-z0-9-]/g, "")
+    if (this.ProjectBucketName.length < 3 ){
+      this.ProjectBucketName = this.ProjectBucketName + "-bucket"
+    }
     this.fetchDocuments();
     this.fetchSharedQueries();
     this.fetchTestPlans();
@@ -253,7 +260,7 @@ class DocGenDataStore {
 
   //for fetching documents
   fetchDocuments() {
-    getBucketFileList(this.teamProjectName.toLowerCase(),true).then((data) => {
+    getBucketFileList(this.ProjectBucketName,true).then((data) => {
       data.sort(function(a,b){
         return new Date(b.lastModified) - new Date(a.lastModified);
       });
@@ -283,7 +290,7 @@ class DocGenDataStore {
     console.log(contentControlObject);
   };
   sendRequestToDocGen() {
-    createIfBucketDoesentExsist((this.teamProjectName));
+    createIfBucketDoesentExsist((this.ProjectBucketName));
     let docReq = this.requestJson;
     console.log(docReq);
     sendDocumentTogenerator(docReq);
@@ -296,7 +303,7 @@ class DocGenDataStore {
       teamProjectName: this.teamProjectName,
       templateFile: this.selectedTemplate.url,
       uploadProperties:{
-        bucketName: this.teamProjectName, 
+        bucketName: this.ProjectBucketName, 
         fileName: tempFileName
         },
       contentControls: this.contentControls,
