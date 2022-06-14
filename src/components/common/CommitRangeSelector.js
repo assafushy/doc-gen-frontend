@@ -2,6 +2,8 @@ import React, { useState , useEffect} from "react";
 import { PrimaryButton } from "office-ui-fabric-react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextFieldM from "@material-ui/core/TextField";
 
 const dropdownStyles = {
   dropdown: { width: 300 },
@@ -63,56 +65,89 @@ const CommitRangeSelector = ({
 
   return (
     <div>
-      <Dropdown
-        placeholder="Select an Heading level"
-        label="Select an Heading level"
-        value={contentHeadingLevel}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8, width: 300 }}
+        autoHighlight
+        openOnFocus
         options={headingLevelOptions}
-        styles={dropdownStyles}
+        getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextFieldM
+            {...params}
+            label="Select an Heading level"
+            variant="outlined"
+          />
+        )}
         onChange={async (event, newValue) => {
           setContentHeadingLevel(newValue.key);
         }}
       />
-      <Dropdown
-        placeholder="Select a Repo"
-        label="Select a Repo"
-        value={selectedRepo.key}
-        options={repoList.map((repo) => {
-          return { key: repo.id, text: repo.name };
-        })}
-        styles={dropdownStyles}
+        <Autocomplete
+          disableClearable
+          style={{ marginBlock: 8 , width: 300 }}
+          autoHighlight
+          openOnFocus
+          options={repoList.map((repo) => {
+            return { key: repo.id, text: repo.name };
+          })}
+          getOptionLabel={(option) => `${option.text}`}
+          renderInput={(params) => (
+            <TextFieldM
+            {...params} 
+            label="Select a Repo" 
+            variant="outlined"
+            />
+            )}
         onChange={async (event, newValue) => {
-            store.fetchGitRepoCommits(newValue.key);
-            setSelectedRepo(newValue);
+          store.fetchGitRepoCommits(newValue.key);
+          setSelectedRepo(newValue);
         }}
-      />
+    />
       {selectedRepo.key !== "" ? (
-      <Dropdown
-        placeholder= "Select start commit"
-        label= "Select start commit"
-        value = {selectedStartCommit.key}
+          <Autocomplete
+          disableClearable
+          style={{ marginBlock: 8 , width: 300 }}
+          autoHighlight
+          openOnFocus
         options = {gitRepoCommits.map((commit) => {
           return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
             })}
-          styles={dropdownStyles}
-          onChange={async (event, newValue) => {
-            setSelectedStartCommit(newValue);
-          }}
-          />
+          getOptionLabel={(option) => `${option.text}`}
+          renderInput={(params) => (
+            <TextFieldM
+            {...params} 
+            label="Select start commit" 
+            variant="outlined"
+            />
+            )}
+        onChange={async (event, newValue) => {
+          setSelectedStartCommit(newValue);
+        }}
+    />
+          
           ) : null}      
       {selectedRepo.key !== "" ? (
-      <Dropdown
-        placeholder= "Select end commit"
-        label= "Select end commit"
-        value = {selectedEndCommit.key}
-        options = {gitRepoCommits.map((commit) => {
-          return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
+      <Autocomplete
+      disableClearable
+      style={{ marginBlock: 8 , width: 300 }}
+      autoHighlight
+      openOnFocus
+    options = {gitRepoCommits.map((commit) => {
+      return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
         })}
-        styles={dropdownStyles}
-        onChange={async (event, newValue) => {
-            setSelectedEndCommit(newValue);
-          }}
+      getOptionLabel={(option) => `${option.text}`}
+      renderInput={(params) => (
+        <TextFieldM
+        {...params} 
+        label="Select start commit" 
+        variant="outlined"
         />
+        )}
+    onChange={async (event, newValue) => {
+      setSelectedEndCommit(newValue);
+    }}
+/>
         ) : null}      
 
       <br />

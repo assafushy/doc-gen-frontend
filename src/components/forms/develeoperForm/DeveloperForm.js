@@ -5,7 +5,10 @@ import { contentTypeOptions } from "../../../store/data/dropDownOptions";
 
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
+
 import { PrimaryButton } from "office-ui-fabric-react";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextFieldM from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 
 import TestContentSelector from "../../common/TestContentSelector";
@@ -32,6 +35,7 @@ const DeveloperForm = observer(({ store }) => {
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <TextField
+            style={{ marginBlock: 8, width: 300 }}
             label="Enter Form Name "
             required
             placeholder="Example: STD"
@@ -39,27 +43,43 @@ const DeveloperForm = observer(({ store }) => {
               store.setDocumentTitle(newValue);
             }}
           />
-          <Dropdown
-            placeholder="Select a TeamProject"
-            label="Select a TeamProject"
-            value={store.teamProject}
+          <Autocomplete
+            disableClearable
+            style={{ marginBlock: 8, width: 300 }}
+            autoHighlight
+            openOnFocus
             options={store.teamProjectsList.map((teamProject) => {
               return { key: teamProject.id, text: teamProject.name };
             })}
-            styles={dropdownStyles}
+            getOptionLabel={(option) => `${option.text}`}
+            renderInput={(params) => (
+              <TextFieldM
+                {...params}
+                label="Select a TeamProject"
+                variant="outlined"
+              />
+            )}
             onChange={async (event, newValue) => {
               store.setTeamProject(newValue.key, newValue.text);
             }}
           />
-          <Dropdown
-            placeholder="Select a Template"
-            label="Select a Template"
-            value={store.selectedTemplate.name}
+          <Autocomplete
+            disableClearable
+            style={{ marginBlock: 8, width: 300 }}
+            autoHighlight
+            openOnFocus
             options={store.templateList.map((template) => {
               return { url: template.url, text: template.name };
             })}
-            styles={dropdownStyles}
-            onChange={(event, newValue) => {
+            getOptionLabel={(option) => `${option.text}`}
+            renderInput={(params) => (
+              <TextFieldM
+                {...params}
+                label="Select a Template"
+                variant="outlined"
+              />
+            )}
+            onChange={async (event, newValue) => {
               store.setSelectedTemplate(newValue);
             }}
           />
@@ -86,15 +106,15 @@ const DeveloperForm = observer(({ store }) => {
               {contentControlType === "test" &&
               contentControlSkin === "test-std" ? (
                 <TestContentSelector
-                store={store}
-                contentControlTitle={contentControlTitle}
-                type={contentControlType}
-                skin={contentControlSkin}
-                testPlansList={store.testPlansList}
-                testSuiteList={store.testSuiteList}
-                fetchTestSuitesList={store.fetchTestSuitesList}
-                editingMode={true}
-                addToDocumentRequestObject={addToDocumentRequestObject}
+                  store={store}
+                  contentControlTitle={contentControlTitle}
+                  type={contentControlType}
+                  skin={contentControlSkin}
+                  testPlansList={store.testPlansList}
+                  testSuiteList={store.testSuiteList}
+                  fetchTestSuitesList={store.fetchTestSuitesList}
+                  editingMode={true}
+                  addToDocumentRequestObject={addToDocumentRequestObject}
                 />
               ) : null}
               {contentControlType === "query" ? (
@@ -126,7 +146,7 @@ const DeveloperForm = observer(({ store }) => {
                   contentControlTitle={contentControlTitle}
                   editingMode={true}
                   addToDocumentRequestObject={addToDocumentRequestObject}
-              /> 
+                />
               ) : null}
             </div>
           ) : null}

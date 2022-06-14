@@ -9,6 +9,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { PrimaryButton } from "office-ui-fabric-react";
 
+
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -70,30 +71,45 @@ const TestContentSelector = ({
 
   return (
     <div>
-      <Dropdown
-        placeholder="Select an Heading level"
-        label="Select an Heading level"
-        value={contentHeadingLevel}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8, width: 300 }}
+        autoHighlight
+        openOnFocus
         options={headingLevelOptions}
-        styles={dropdownStyles}
+        getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Select an Heading level"
+            variant="outlined"
+          />
+        )}
         onChange={async (event, newValue) => {
           setContentHeadingLevel(newValue.key);
         }}
       />
-      <Dropdown
-        placeholder="Select a Test Plan"
-        label="Select a Plan"
-        value={selectedTestPlan.key}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8, width: 300 }}
+        autoHighlight
+        openOnFocus
         options={testPlansList.map((testplan) => {
           return { key: testplan.id, text: testplan.name};
         })}
-        styles={dropdownStyles}
+                getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Select a Test Plan"
+            variant="outlined"
+          />
+        )}
         onChange={async (event, newValue) => {
           store.fetchTestSuitesList(newValue.key)
           setSelectedTestPlan(newValue);
         }}
       />
-
       <FormContorlLabel
         control={
           <Checkbox
@@ -119,6 +135,7 @@ const TestContentSelector = ({
       />
 {isSuiteSpecific ? (
 <Autocomplete
+      style={{ marginBlock: 8, width: 300 }}
       multiple
       options={testSuiteList}
       disableCloseOnSelect
