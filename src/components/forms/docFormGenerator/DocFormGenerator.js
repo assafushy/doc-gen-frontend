@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 
 import Grid from "@material-ui/core/Grid";
 
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextFieldM from '@material-ui/core/TextField';
 import { PrimaryButton } from "office-ui-fabric-react";
@@ -13,10 +12,6 @@ import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
 import TraceTableSelector from "../../common/TraceTableSelector";
 import ChangeTableSelector from "../../common/ChangeTableSelector";
-
-const dropdownStyles = {
-  dropdown: { width: 300 },
-};
 
 const DocFormGenerator = observer(
   ({ index, value, jsonDoc = { contentControls: [] }, store }) => {

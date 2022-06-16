@@ -1,6 +1,5 @@
 import React, { useState , useEffect} from "react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import FormContorlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from '@material-ui/core/TextField';
@@ -12,11 +11,6 @@ import { PrimaryButton } from "office-ui-fabric-react";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-
-const dropdownStyles = {
-  dropdown: { width: 300 },
-};
 
 const TestContentSelector = ({
   store,

@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-
 import CommitRangeSelector from "./CommitRangeSelector";
 import CommitDateSelector from "./CommitDateSelector";
 import PipelineSelector from "./PipelineSelector";
@@ -10,9 +7,6 @@ import { observer } from "mobx-react";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextFieldM from '@material-ui/core/TextField';
 
-const dropdownStyles = {
-  dropdown: { width: 300 },
-};
 const baseDataType = [
   { key: 0, text: "commit-range", type: "range" },
   { key: 1, text: "commit-date", type: "date" },
