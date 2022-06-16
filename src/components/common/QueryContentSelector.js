@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { PrimaryButton } from "office-ui-fabric-react";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextFieldM from '@material-ui/core/TextField';
 
 const dropdownStyles = {
   dropdown: { width: 300 },
@@ -25,13 +25,21 @@ const QueryContentSelector = ({
   });
   return (
     <div>
-      <Dropdown
-        placeholder="Select an Heading level"
-        label="Select an Heading level"
-        value={contentHeadingLevel}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8, width: 300 }}
+        autoHighlight
+        openOnFocus
         options={headingLevelOptions}
-        styles={dropdownStyles}
-        onChange={(event, newValue) => {
+        getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextFieldM
+            {...params}
+            label="Select an Heading level"
+            variant="outlined"
+          />
+        )}
+        onChange={async (event, newValue) => {
           setContentHeadingLevel(newValue.key);
         }}
       />

@@ -1,34 +1,45 @@
 version: "3.9"
 
+x-common-variables: &common-vars
+  MINIOSERVER: "http://s3:9000"
+  MINIO_ROOT_USER: "your-root-user"
+  MINIO_ROOT_PASSWORD: "your-root-password"
+  MINIO_REGION: "ap-southeast-1"
 services:
-  dg-frontend:
-    image: ui:test
+  dg-fe:
+    image: assafushy/dg-front-end:0.3.2
     ports:
-      - "80:8080"
+      - "80:80"
     environment:
-      MINIO-ENDPOINT-PLACEHOLDER: ss
-      MINIO-URL-PLACEHOLDER: ss
-      BACKEND-URL-PLACEHOLDER-ContentControl: ss
-      MINIO-ACCESS-ID-PLACEHOLDER: ss
-      MINIO-SECRET-ACCESS-KEY-PLACEHOLDER: ss
-      AWS-REGION-PLACEHOLDER: ss
+      BACKEND-URL-PLACEHOLDER-ContentControl: "http://dg-api-gate:3001"
+  dg-init-job:
+    image: assafushy/dg-initializer:0.0.2414869824
+    depends_on:
+      - "s3"
+    environment:
+      <<: *common-vars
+      MINIOROOTUSER: "your-root-user"
+      MINIOROOTPASSWORD: "your-root-password"
   dg-content-control:
-    image: assafushy/dg-content-control-generator:latest
+    image: assafushy/dg-content-control-generator:1.6.2
     ports:
       - "3000:3000"
+    environment:
+      downloadManagerUrl: "http://download-manager:8000"
   dg-api-gate:
-    image: assafushy/dg-api-gate:latest
+    image: assafushy/dg-api-gate:0.12.0
     ports:
       - "3001:3000"
     environment:
+      <<: *common-vars
+      MINIO_ENDPOINT: "s3"
       dgContentControlUrl: "http://dg-content-control:3000"
       jsonToWordPostUrl: "http://json-to-word:5000"
+      minioPublicEndPoint: "http://localhost:9000" #change with hosted machine hostname
   json-to-word:
-    image: assafushy/json-to-word:latest
+    image: assafushy/json-to-word:0.0.2414584064
     ports:
       - "5000:5000"
-    environment:
-      MinioUrl: "http://s3:9000"
   s3:
     image: minio/minio
     ports:
@@ -37,9 +48,9 @@ services:
     volumes:
       - ./minio:/data
     environment:
-      MINIO_ACCESS_KEY: "your-key"
-      MINIO_SECRET_KEY: "your-secret"
-      MINIO_ROOT_USER: "your-root-user"
-      MINIO_ROOT_PASSWORD: "your-root-password"
-      MINIO_REGION: "ap-southeast-1"
+      <<: *common-vars
     command: server --address 0.0.0.0:9000  --console-address ":4000" /data
+  python-download-service:
+    image: assafushy/dg-download-manager:0.0.2414583858
+    ports:
+      - "8000:8000"

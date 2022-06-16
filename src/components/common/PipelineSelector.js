@@ -1,12 +1,8 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { PrimaryButton } from "office-ui-fabric-react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-
-
-const dropdownStyles = {
-  dropdown: { width: 300 },
-};
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextFieldM from "@material-ui/core/TextField";
 
 const PipelineSelector = ({
   store,
@@ -16,7 +12,7 @@ const PipelineSelector = ({
   pipelineRunHistory,
   editingMode,
   addToDocumentRequestObject,
-  contentControlIndex
+  contentControlIndex,
 }) => {
   const [selectedPipeline, setSelectedPipeline] = useState({
     key: "",
@@ -24,27 +20,27 @@ const PipelineSelector = ({
   });
 
   useEffect(() => {
-    if (editingMode === false){  
+    if (editingMode === false) {
       UpdateDocumentRequestObject();
     }
   });
 
-  function UpdateDocumentRequestObject(){
+  function UpdateDocumentRequestObject() {
     addToDocumentRequestObject(
       {
-        type:"change-description-table",
+        type: "change-description-table",
         title: contentControlTitle,
         skin: skin,
         headingLevel: contentHeadingLevel,
         data: {
-          from:selectedPipelineRunStart.key,
-          to:selectedPipelineRunEnd.key,
-          rangeType:"pipeline",
-          linkTypeFilterArray:null
+          from: selectedPipelineRunStart.key,
+          to: selectedPipelineRunEnd.key,
+          rangeType: "pipeline",
+          linkTypeFilterArray: null,
         },
       },
       contentControlIndex
-      );
+    );
   }
 
   const [selectedPipelineRunStart, setSelectedPipelineRunStart] = useState({
@@ -61,63 +57,96 @@ const PipelineSelector = ({
 
   return (
     <div>
-      <Dropdown
-        placeholder="Select an Heading level"
-        label="Select an Heading level"
-        value={contentHeadingLevel}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8, width: 300 }}
+        autoHighlight
+        openOnFocus
         options={headingLevelOptions}
-        styles={dropdownStyles}
+        getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextFieldM
+            {...params}
+            label="Select an Heading level"
+            variant="outlined"
+          />
+        )}
         onChange={async (event, newValue) => {
           setContentHeadingLevel(newValue.key);
         }}
       />
-      <Dropdown
-        placeholder="Select a Pipeline"
-        label="Select a Pipeline"
-        value={selectedPipeline.key}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8, width: 300 }}
+        autoHighlight
+        openOnFocus
         options={pipelineList.map((pipeline) => {
           return { key: pipeline.id, text: pipeline.name };
         })}
-        styles={dropdownStyles}
+        getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextFieldM
+            {...params}
+            label="Select a Pipeline"
+            variant="outlined"
+          />
+        )}
         onChange={async (event, newValue) => {
           store.fetchPipelineRunHistory(newValue.key);
           setSelectedPipeline(newValue);
         }}
+      />
+      {selectedPipeline.key !== "" ? (
+        <Autocomplete
+          disableClearable
+          style={{ marginBlock: 8, width: 300 }}
+          autoHighlight
+          openOnFocus
+          options={pipelineRunHistory.map((run) => {
+            return { key: run.id, text: run.name };
+          })}
+          getOptionLabel={(option) => `${option.text}`}
+          renderInput={(params) => (
+            <TextFieldM
+              {...params}
+              label="Select start pipeline run"
+              variant="outlined"
+            />
+          )}
+          onChange={async (event, newValue) => {
+            setSelectedPipelineRunStart(newValue);
+          }}
         />
-        {selectedPipeline.key !== "" ? (
-            <Dropdown
-              placeholder= "Select start pipeline run"
-              label= "Select start pipeline run"
-              value = {selectedPipelineRunStart.key}
-              options = {pipelineRunHistory.map((run) => {
-                return { key: run.id, text: run.name}
-                  })}
-                styles={dropdownStyles}
-                onChange={async (event, newValue) => {
-                  setSelectedPipelineRunStart(newValue)}}
-                />
-                ) : null}      
-        {selectedPipeline.key !== "" ? (
-            <Dropdown
-              placeholder= "Select end pipeline run"
-              label= "Select end pipeline run"
-              value = {selectedPipelineRunEnd.key}
-              options = {pipelineRunHistory.map((run) => {
-                return { key: run.id, text: run.name}
-                  })}
-                styles={dropdownStyles}
-                onChange={async (event, newValue) => {
-                    setSelectedPipelineRunEnd(newValue)
-                  }}
-                />
-                ) : null}  
+      ) : null}
+      {selectedPipeline.key !== "" ? (
+        <Autocomplete
+          disableClearable
+          style={{ marginBlock: 8, width: 300 }}
+          autoHighlight
+          openOnFocus
+          options={pipelineRunHistory.map((run) => {
+            return { key: run.id, text: run.name };
+          })}
+          getOptionLabel={(option) => `${option.text}`}
+          renderInput={(params) => (
+            <TextFieldM
+              {...params}
+              label="Select end pipeline run"
+              variant="outlined"
+            />
+          )}
+          onChange={async (event, newValue) => {
+            setSelectedPipelineRunEnd(newValue);
+          }}
+        />
+      ) : null}
       <br />
       <br />
       {editingMode ? (
         <PrimaryButton
           text="Add Content To Document"
           onClick={() => {
-            UpdateDocumentRequestObject()
+            UpdateDocumentRequestObject();
           }}
         />
       ) : null}

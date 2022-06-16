@@ -3,8 +3,8 @@ import { observer } from "mobx-react";
 
 import Grid from "@material-ui/core/Grid";
 
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextFieldM from '@material-ui/core/TextField';
 import { PrimaryButton } from "office-ui-fabric-react";
 
 import TemplateSelector from "../../common/TemplateSelector";
@@ -12,10 +12,6 @@ import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
 import TraceTableSelector from "../../common/TraceTableSelector";
 import ChangeTableSelector from "../../common/ChangeTableSelector";
-
-const dropdownStyles = {
-  dropdown: { width: 300 },
-};
 
 const DocFormGenerator = observer(
   ({ index, value, jsonDoc = { contentControls: [] }, store }) => {
@@ -89,32 +85,46 @@ const DocFormGenerator = observer(
 
     return (
       <div>
-        <Dropdown
-          placeholder="Select a TeamProject"
-          label="Select a TeamProject"
-          value={store.teamProject}
-          options={store.teamProjectsList.map((teamProject) => {
-            console.log(teamProject);
-            return { key: teamProject.id, text: teamProject.name };
-          })}
-          styles={dropdownStyles}
-          onChange={async (event, newValue) => {
-            store.setTeamProject(newValue.key,newValue.text);
-          }}
-        />
-
-        <Dropdown
-          placeholder="Select a Template"
-          label="Select a Template"
-          value={store.selectedTemplate.name}
-          options={store.templateList.map((template)=> {
-                return { url: template.url, text: template.name };
-          })}
-          styles={dropdownStyles}
-          onChange= {(event,newValue)=>{
-            store.setSelectedTemplate(newValue)}}
+          <Autocomplete
+            disableClearable
+            style={{ marginBlock: 8, width: 300 }}
+            autoHighlight
+            openOnFocus
+            options={store.teamProjectsList.map((teamProject) => {
+              return { key: teamProject.id, text: teamProject.name };
+            })}
+            getOptionLabel={(option) => `${option.text}`}
+            renderInput={(params) => (
+              <TextFieldM
+                {...params}
+                label="Select a TeamProject"
+                variant="outlined"
+              />
+            )}
+            onChange={async (event, newValue) => {
+              store.setTeamProject(newValue.key, newValue.text);
+            }}
           />
-
+          <Autocomplete
+            disableClearable
+            style={{ marginBlock: 8, width: 300 }}
+            autoHighlight
+            openOnFocus
+            options={store.templateList.map((template) => {
+              return { url: template.url, text: template.name };
+            })}
+            getOptionLabel={(option) => `${option.text}`}
+            renderInput={(params) => (
+              <TextFieldM
+                {...params}
+                label="Select a Template"
+                variant="outlined"
+              />
+            )}
+            onChange={async (event, newValue) => {
+              store.setSelectedTemplate(newValue);
+            }}
+          />
         <br />
         <Grid container spacing={3}>
           {jsonDoc.contentControls
