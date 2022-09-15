@@ -59,6 +59,10 @@ export default class AzuredevopsRestapi {
     let pipelineDataProvider = await this.azureRestApi.getPipelinesDataProvider();
     return pipelineDataProvider.GetPipelineRunHistory(teamProjectId,pipelineId);
   }
+  async getRepoPullRequests(RepoId = "",teamProjectId = "",){
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetPullRequestsForRepo(teamProjectId,RepoId);
+  }
   
   async getCollectionLinkTypes() {
     try {
