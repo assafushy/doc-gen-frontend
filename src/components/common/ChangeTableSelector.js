@@ -4,14 +4,16 @@ import CommitDateSelector from "./CommitDateSelector";
 import PipelineSelector from "./PipelineSelector";
 import ReleaseSelector from "./ReleaseSelector";
 import { observer } from "mobx-react";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextFieldM from '@material-ui/core/TextField';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextFieldM from "@material-ui/core/TextField";
+import PullRequestSelector from "./PullRequestSelector";
 
 const baseDataType = [
   { key: 0, text: "commit-range", type: "range" },
   { key: 1, text: "commit-date", type: "date" },
   { key: 2, text: "pipeline-range", type: "pipeline" },
   { key: 3, text: "release-range", type: "release" },
+  { key: 4, text: "pullrequest-range", type: "pullrequest" },
 ];
 
 const ChangeTableSelector = observer(
@@ -92,7 +94,18 @@ const ChangeTableSelector = observer(
             contentControlIndex={contentControlIndex}
           />
         ) : null}
-
+                {selectedType === "pullrequest" ? (
+          <PullRequestSelector
+            store={store}
+            contentControlTitle={contentControlTitle}
+            skin="change-table"
+            repoList={store.repoList}
+            pullRequests={store.pullRequestList}
+            editingMode={editingMode}
+            addToDocumentRequestObject={addToDocumentRequestObject}
+            contentControlIndex={contentControlIndex}
+          />
+        ) : null}
         <br />
         <br />
       </div>

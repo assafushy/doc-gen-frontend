@@ -31,6 +31,7 @@ class DocGenDataStore {
       releaseDefinitionList:observable,
       releaseDefinitionHistory:observable,
       repoList: observable,
+      pullRequestList: observable,
       gitRepoCommits: observable,
       linkTypes: observable,
       documents: observable,
@@ -43,6 +44,8 @@ class DocGenDataStore {
       setSharedQueries: action,
       fetchGitRepoList: action,
       setGitRepoList: action,
+      fetchRepoPullRequests:action,
+      setRepoPullRequests: action,
       fetchGitRepoCommits: action,
       setGitRepoCommits: action,
       fetchPipelineList:action,
@@ -80,6 +83,7 @@ class DocGenDataStore {
   testSuiteList = []; // list of testsuites
   documents = []; //list of all project documents
   repoList = []; //list of all project repos
+  pullRequestList = []; //list of all pull requests of specific repo
   gitRepoCommits = []; //commit history of a specific repo
   pipelineList = []; //list of all project pipelines
   pipelineRunHistory = []; //pipeline history of a specific pipeline
@@ -191,6 +195,16 @@ class DocGenDataStore {
   //for setting git repo commits
   setGitRepoCommits(data){
     this.gitRepoCommits = data.value || [];
+    }
+  //for setting repo pull requests
+    setRepoPullRequests(data){
+      this.pullRequestList = data.value || [];
+    }
+    //for fetching repo pull requests
+    fetchRepoPullRequests(RepoId){
+      this.azureRestClient.getRepoPullRequests(RepoId,this.teamProject).then((data) =>{
+        this.setRepoPullRequests(data);
+      })
     }
   //for fetching pipeline list
   fetchPipelineList(){
