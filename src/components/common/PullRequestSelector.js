@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { PrimaryButton } from "office-ui-fabric-react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextFieldM from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -66,7 +65,7 @@ const PullRequestSelector = ({
         options={headingLevelOptions}
         getOptionLabel={(option) => `${option.text}`}
         renderInput={(params) => (
-          <TextFieldM
+          <TextField
             {...params}
             label="Select an Heading level"
             variant="outlined"
@@ -86,7 +85,7 @@ const PullRequestSelector = ({
         })}
         getOptionLabel={(option) => `${option.text}`}
         renderInput={(params) => (
-          <TextFieldM {...params} label="Select a Repo" variant="outlined" />
+          <TextField {...params} label="Select a Repo" variant="outlined" />
         )}
         onChange={async (event, newValue) => {
           store.fetchRepoPullRequests(newValue.key);
