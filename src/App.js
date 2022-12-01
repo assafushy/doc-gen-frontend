@@ -9,8 +9,10 @@ function App({ store }) {
   const [cookies, setCookie] = useCookies(["azuredevopsUrl", "azuredevopsPat"]);
 
   const login = (selectedUrl, selectedPat) => {
-    setCookie("azuredevopsUrl", selectedUrl);
-    setCookie("azuredevopsPat", selectedPat);
+    let d = new Date();
+    d.setTime(d.getTime() + (525960*60*1000));
+    setCookie("azuredevopsUrl", selectedUrl, { path: '/' , expires: d});
+    setCookie("azuredevopsPat", selectedPat, { path: '/' , expires: d});
   };
 
   return (
