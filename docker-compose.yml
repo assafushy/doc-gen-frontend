@@ -54,3 +54,5 @@ services:
     image: assafushy/dg-download-manager:0.0.2414583858
     ports:
       - "8000:8000"
+
+
