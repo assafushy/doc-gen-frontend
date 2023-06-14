@@ -13,6 +13,8 @@ function App({ store }) {
     d.setTime(d.getTime() + (525960*60*1000));
     setCookie("azuredevopsUrl", selectedUrl, { path: '/' , expires: d});
     setCookie("azuredevopsPat", selectedPat, { path: '/' , expires: d});
+    window.location.reload(); // Reload the page after signing in
+
   };
 
   return (
