@@ -1,8 +1,9 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { PrimaryButton } from "office-ui-fabric-react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextFieldM from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const CommitRangeSelector = ({
   store,
@@ -13,7 +14,6 @@ const CommitRangeSelector = ({
   editingMode,
   addToDocumentRequestObject,
   contentControlIndex
-
 }) => {
   const [selectedRepo, setSelectedRepo] = useState({
     key: "",
@@ -55,7 +55,6 @@ const CommitRangeSelector = ({
     text: "",
   });
 
-
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
 
   return (
@@ -78,85 +77,89 @@ const CommitRangeSelector = ({
           setContentHeadingLevel(newValue.key);
         }}
       />
-        <Autocomplete
-          disableClearable
-          style={{ marginBlock: 8 , width: 300 }}
-          autoHighlight
-          openOnFocus
-          options={repoList.map((repo) => {
-            return { key: repo.id, text: repo.name };
-          })}
-          getOptionLabel={(option) => `${option.text}`}
-          renderInput={(params) => (
-            <TextFieldM
-            {...params} 
-            label="Select a Repo" 
-            variant="outlined"
-            />
-            )}
+      <Autocomplete
+        disableClearable
+        style={{ marginBlock: 8 , width: 300 }}
+        autoHighlight
+        openOnFocus
+        options={repoList.map((repo) => {
+          return { key: repo.id, text: repo.name };
+        })}
+        getOptionLabel={(option) => `${option.text}`}
+        renderInput={(params) => (
+          <TextFieldM
+          {...params} 
+          label="Select a Repo" 
+          variant="outlined"
+          />
+        )}
         onChange={async (event, newValue) => {
           store.fetchGitRepoCommits(newValue.key);
           setSelectedRepo(newValue);
         }}
-    />
-      {selectedRepo.key !== "" ? (
-          <Autocomplete
-          disableClearable
-          style={{ marginBlock: 8 , width: 300 }}
-          autoHighlight
-          openOnFocus
-        options = {gitRepoCommits.map((commit) => {
-          return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
-            })}
-          getOptionLabel={(option) => `${option.text}`}
-          renderInput={(params) => (
-            <TextFieldM
-            {...params} 
-            label="Select start commit" 
-            variant="outlined"
-            />
-            )}
-        onChange={async (event, newValue) => {
-          setSelectedStartCommit(newValue);
-        }}
-    />
-          
-          ) : null}      
-      {selectedRepo.key !== "" ? (
-      <Autocomplete
+      />
+{selectedRepo.key !== "" ? (
+  <Tooltip title="Select the commit from which you want to start comparing changes. This is usually an older commit." arrow placement="right">
+    <Autocomplete
       disableClearable
       style={{ marginBlock: 8 , width: 300 }}
       autoHighlight
       openOnFocus
-    options = {gitRepoCommits.map((commit) => {
-      return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
-        })}
+      options = {gitRepoCommits.slice().reverse().map((commit) => {
+        return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
+      })}          
       getOptionLabel={(option) => `${option.text}`}
       renderInput={(params) => (
         <TextFieldM
         {...params} 
-        label="Select end commit" 
+        label="Select Oldest Commit" 
         variant="outlined"
         />
-        )}
-    onChange={async (event, newValue) => {
-      setSelectedEndCommit(newValue);
-    }}
-/>
-        ) : null}      
+      )}
+      onChange={async (event, newValue) => {
+        setSelectedStartCommit(newValue);
+      }}
+    />
+  </Tooltip>
+) : null}
 
-      <br />
-      <br />
-      {editingMode ? (
-        <PrimaryButton
-          text="Add Content To Document"
-          onClick={() => {
-            UpdateDocumentRequestObject()
-          }}
+{selectedRepo.key !== "" ? (
+  <Tooltip title="Select the commit up to which you want to view changes. This is usually a more recent commit." arrow placement="right">
+    <Autocomplete
+      disableClearable
+      style={{ marginBlock: 8 , width: 300 }}
+      autoHighlight
+      openOnFocus
+      options = {gitRepoCommits.map((commit) => {
+        return { key: commit.commitId, text: `(${commit.commitId.substring(0,4)}) - ${commit.comment}`}
+      })}
+      getOptionLabel={(option) => `${option.text}`}
+      renderInput={(params) => (
+        <TextFieldM
+        {...params} 
+        label="Select Newest Commit" 
+        variant="outlined"
         />
-      ) : null}
-    </div>
-  );
+      )}
+      onChange={async (event, newValue) => {
+        setSelectedEndCommit(newValue);
+      }}
+    />
+  </Tooltip>
+) : null}
+
+<br />
+<br />
+{editingMode ? (
+  <PrimaryButton
+    text="Add Content To Document"
+    onClick={() => {
+      UpdateDocumentRequestObject()
+    }}
+  />
+) : null}
+</div>
+);
 };
 
 export default CommitRangeSelector;

@@ -114,11 +114,15 @@ class DocGenDataStore {
 
   //for fetching teamProjects
   fetchTeamProjects() {
-    this.azureRestClient.getTeamProjects().then((data) => {
-      console.log(data);
-      this.teamProjectsList =
-        data.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || [];
-    });
+    if (azureDevopsUrl && azuredevopsPat) {
+      this.azureRestClient.getTeamProjects().then((data) => {
+        console.log(data);
+        this.teamProjectsList =
+          data.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || [];
+      });
+    } else {
+      console.error("Missing required cookies: azuredevopsUrl or azuredevopsPat");
+    }
   }
   //for setting focused teamProject
   setTeamProject(teamProjectId, teamProjectName) {
@@ -303,12 +307,13 @@ class DocGenDataStore {
     }
     console.log(contentControlObject);
   };
-  sendRequestToDocGen() {
-    createIfBucketDoesentExsist((this.ProjectBucketName));
+  async sendRequestToDocGen() {
+    await createIfBucketDoesentExsist((this.ProjectBucketName));
     let docReq = this.requestJson;
     console.log(docReq);
-    sendDocumentTogenerator(docReq);
-  }
+    return sendDocumentTogenerator(docReq);  
+}
+
   get requestJson() {
     let tempFileName = `${this.teamProjectName}-${new Date().toISOString().substring(0, 19).replace('T', '-')}`
     return {

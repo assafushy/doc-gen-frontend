@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
-
 import Grid from "@material-ui/core/Grid";
-
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextFieldM from '@material-ui/core/TextField';
 import { PrimaryButton } from "office-ui-fabric-react";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import TemplateSelector from "../../common/TemplateSelector";
 import TestContentSelector from "../../common/TestContentSelector";
 import QueryContentSelector from "../../common/QueryContentSelector";
@@ -15,7 +13,9 @@ import ChangeTableSelector from "../../common/ChangeTableSelector";
 
 const DocFormGenerator = observer(
   ({ index, value, jsonDoc = { contentControls: [] }, store }) => {
-    const generateFormControls = (formControl,contentControlIndex) => {
+    const [loading, setLoading] = useState(false);
+    
+    const generateFormControls = (formControl, contentControlIndex) => {
       switch (formControl.skin) {
         case "test-std":
           return (
@@ -83,6 +83,18 @@ const DocFormGenerator = observer(
       }
     };
 
+    const handleSendRequest = async () => {
+      setLoading(true);
+      try {
+        await store.sendRequestToDocGen();
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+
     return (
       <div>
           <Autocomplete
@@ -143,10 +155,10 @@ const DocFormGenerator = observer(
 
         <PrimaryButton
           text="Send Request"
-          onClick={() => {
-            store.sendRequestToDocGen();
-          }}
+          onClick={handleSendRequest}
+          disabled={loading}
         />
+        {loading && <CircularProgress />}
         </div>
     );
   }
