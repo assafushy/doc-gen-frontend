@@ -6,8 +6,7 @@ COPY package.json ./
 # Install the dependencies and make the folder
 RUN npm install
 COPY . .
-RUN  apk add dos2unix --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
-RUN dos2unix /react-ui/src/deployment/env-uri-init.sh
+
 # Build the project and copy the files
 RUN npm run build
 
