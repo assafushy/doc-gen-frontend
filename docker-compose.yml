@@ -1,5 +1,4 @@
 version: "3.9"
-
 x-common-variables: &common-vars
   MINIOSERVER: "http://s3:9000"
   MINIO_ROOT_USER: "your-root-user"
