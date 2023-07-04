@@ -10,7 +10,6 @@ COPY . .
 # Build the project and copy the files
 RUN npm run build
 
-
 FROM nginx:alpine
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
