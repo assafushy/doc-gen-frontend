@@ -15,6 +15,13 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org
+      - name: "Automated Version Bump"
+        uses: "phips28/gh-action-bump-version@master"
+        id: bump_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit-message: "CI: bumps version to {{version}} [skip ci]"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
