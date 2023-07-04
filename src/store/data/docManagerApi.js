@@ -74,4 +74,4 @@ export const sendDocumentTogenerator = async (docJson) => {
   } catch (err) {
     return [];
   }
-};
+}; 
