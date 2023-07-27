@@ -1,15 +1,13 @@
 # stage1 as builder
 FROM node:14.18-alpine3.15 as builder
 WORKDIR /react-ui
-# copy the package.json to install dependencies
-COPY package.json ./
+# copy the package.json and package-lock.json to install dependencies
+COPY package*.json ./
 # Install the dependencies and make the folder
-RUN npm install
+RUN npm ci
 COPY . .
-
 # Build the project and copy the files
 RUN npm run build
-
 
 FROM nginx:alpine
 ## Remove default nginx index page

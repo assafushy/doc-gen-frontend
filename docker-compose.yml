@@ -10,7 +10,7 @@ services:
     ports:
       - "80:80"
     environment:
-      BACKEND-URL-PLACEHOLDER-ContentControl: "http://dg-api-gate:3001"
+      BACKEND-URL-PLACEHOLDER-ContentControl: "http://dg-api-gate:30001"
   dg-init-job:
     image: assafushy/dg-initializer:latest
     depends_on:
@@ -28,7 +28,7 @@ services:
   dg-api-gate:
     image: assafushy/dg-api-gate:latest
     ports:
-      - "3001:3000"
+      - "30001:3000"
     environment:
       <<: *common-vars
       MINIO_ENDPOINT: "s3"

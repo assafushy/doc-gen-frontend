@@ -1,7 +1,7 @@
 let jsonDocument_url =
   window.location.hostname !== "localhost"
-    ? `http://${window.location.hostname}:3001`
-    : "http://localhost:3001";
+    ? `http://${window.location.hostname}:30001`
+    : "http://localhost:30001";
 
 let C = {
   jsonDocument_url,
