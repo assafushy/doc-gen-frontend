@@ -54,6 +54,7 @@ const ChangeTableSelector = observer(
             contentControlTitle={contentControlTitle}
             skin="change-table"
             repoList={store.repoList}
+            branchesList={store.branchesList}
             gitRepoCommits={store.gitRepoCommits}
             editingMode={editingMode}
             addToDocumentRequestObject={addToDocumentRequestObject}
@@ -62,9 +63,11 @@ const ChangeTableSelector = observer(
         ) : null}
         {selectedType === "date" ? (
           <CommitDateSelector
+            store={store}
             contentControlTitle={contentControlTitle}
             skin="change-table"
             repoList={store.repoList}
+            branchesList={store.branchesList}
             editingMode={editingMode}
             addToDocumentRequestObject={addToDocumentRequestObject}
             contentControlIndex={contentControlIndex}

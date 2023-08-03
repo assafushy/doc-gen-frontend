@@ -31,6 +31,7 @@ class DocGenDataStore {
       releaseDefinitionList:observable,
       releaseDefinitionHistory:observable,
       repoList: observable,
+      branchesList: observable,
       pullRequestList: observable,
       gitRepoCommits: observable,
       linkTypes: observable,
@@ -43,7 +44,9 @@ class DocGenDataStore {
       fetchSharedQueries: action,
       setSharedQueries: action,
       fetchGitRepoList: action,
+      fetchGitRepoBrances: action,
       setGitRepoList: action,
+      setBranchesList: action,
       fetchRepoPullRequests:action,
       setRepoPullRequests: action,
       fetchGitRepoCommits: action,
@@ -83,6 +86,7 @@ class DocGenDataStore {
   testSuiteList = []; // list of testsuites
   documents = []; //list of all project documents
   repoList = []; //list of all project repos
+  branchesList = []; //list of all branches in repo
   pullRequestList = []; //list of all pull requests of specific repo
   gitRepoCommits = []; //commit history of a specific repo
   pipelineList = []; //list of all project pipelines
@@ -186,13 +190,26 @@ class DocGenDataStore {
       this.setGitRepoList(data);
     })
   }
+
+  //for fetching repo list
+  fetchGitRepoBrances(RepoId){
+    this.azureRestClient.getGitRepoBrances(RepoId,this.teamProject).then((data)=> {
+      this.setBranchesList(data);
+    })
+  }
+
   // for setting repo list
   setGitRepoList(data){
     this.repoList = data.value || [];
   }
+
+  // for setting branch list
+  setBranchesList(data){
+    this.branchesList = data.value || [];
+  }
   //for fetching git repo commits
-  fetchGitRepoCommits(RepoId){
-      this.azureRestClient.getGitRepoCommits(RepoId,this.teamProject).then((data)=> {
+  fetchGitRepoCommits(RepoId, branchName){
+      this.azureRestClient.getGitRepoCommits(RepoId,this.teamProject, branchName).then((data)=> {
         this.setGitRepoCommits(data);
     })
   }

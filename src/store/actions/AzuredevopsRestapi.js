@@ -1,4 +1,5 @@
 import AzureRestApi from "@doc-gen/dg-data-provider-azuredevops";
+import { ReplyAllOutlined } from "@material-ui/icons";
 
 export default class AzuredevopsRestapi {
   azureRestApi;
@@ -35,9 +36,14 @@ export default class AzuredevopsRestapi {
     return gitDataProvider.GetTeamProjectGitReposList(teamProjectId);
   }
 
-  async getGitRepoCommits(RepoId = "",teamProjectId = "") {
+  async getGitRepoBrances(RepoId = "",teamProjectId = "") {
     let gitDataProvider = await this.azureRestApi.getGitDataProvider();
-    return gitDataProvider.GetCommitsForRepo(teamProjectId,RepoId);
+    return gitDataProvider.GetRepoBranches(teamProjectId, RepoId);
+  }
+
+  async getGitRepoCommits(RepoId = "",teamProjectId = "", branchName = "") {
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetCommitsForRepo(teamProjectId,RepoId,branchName);
   }
 
   async getReleaseDefinitionList(teamProjectId = "") {
@@ -64,6 +70,11 @@ export default class AzuredevopsRestapi {
     return gitDataProvider.GetPullRequestsForRepo(teamProjectId,RepoId);
   }
   
+  async GetRepoBranches(RepoId = "",teamProjectId = "",){
+    let gitDataProvider = await this.azureRestApi.getGitDataProvider();
+    return gitDataProvider.GetRepoBranches(teamProjectId,RepoId);
+  }
+
   async getCollectionLinkTypes() {
     try {
       let mangementDataProvider = this.azureRestApi.getMangementDataProvider();

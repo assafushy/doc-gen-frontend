@@ -7,13 +7,16 @@ import {
   DatePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
-
 import DateFnsUtils from '@date-io/date-fns';
+import Tooltip from "@material-ui/core/Tooltip";
+
 
 const CommitDateSelector = ({
+  store,
   contentControlTitle,
   skin,
   repoList,
+  branchesList,
   editingMode,
   addToDocumentRequestObject,
   contentControlIndex
@@ -22,6 +25,12 @@ const CommitDateSelector = ({
     key: "",
     text: "",
   });
+
+  const [selectedBranch, setSelectedBranch] = useState({
+    key: "",
+    text: "",
+  });
+
   const [selectedStartDate, setSelectedStartDate] = useState(new Date());
 
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
@@ -46,7 +55,8 @@ const CommitDateSelector = ({
             from:selectedStartDate,
             to:selectedEndDate,
             rangeType:"date",
-            linkTypeFilterArray:null
+            linkTypeFilterArray:null,
+            branchName:selectedBranch.key
           },
         },
         contentControlIndex
@@ -90,9 +100,38 @@ const CommitDateSelector = ({
             />
             )}
         onChange={async (event, newValue) => {
+          store.fetchGitRepoBrances(newValue.key);
           setSelectedRepo(newValue);
         }}
     />
+
+{selectedRepo.key !== "" ? (
+    <Autocomplete
+      disableClearable
+      style={{ marginBlock: 8 , width: 300 }}
+      autoHighlight
+      openOnFocus
+      options={branchesList.map((branch) => {
+        let splitName = branch.name.split('/');
+        let indexAfterHeads = splitName.indexOf('heads') + 1;
+        let elementsAfterHeads = splitName.slice(indexAfterHeads).join('/');
+        return { key: elementsAfterHeads, text: elementsAfterHeads };
+      })}      
+      getOptionLabel={(option) => `${option.text}`}
+      renderInput={(params) => (
+        <TextFieldM
+        {...params} 
+        label="Select a branch" 
+        variant="outlined"
+        />
+      )}
+
+      onChange={async (event, newValue) => {
+        setSelectedBranch(newValue);
+      }}
+    />
+) : null}
+
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker 
           autoOk

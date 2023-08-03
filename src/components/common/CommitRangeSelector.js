@@ -10,12 +10,18 @@ const CommitRangeSelector = ({
   contentControlTitle,
   skin,
   repoList,
+  branchesList,
   gitRepoCommits,
   editingMode,
   addToDocumentRequestObject,
   contentControlIndex
 }) => {
   const [selectedRepo, setSelectedRepo] = useState({
+    key: "",
+    text: "",
+  });
+
+  const [selectedBranch, setSelectedBranch] = useState({
     key: "",
     text: "",
   });
@@ -38,7 +44,8 @@ const CommitRangeSelector = ({
           from:selectedStartCommit.key,
           to:selectedEndCommit.key,
           rangeType:"commitSha",
-          linkTypeFilterArray:null
+          linkTypeFilterArray:null,
+          branchName:selectedBranch.key
         },
       },
       contentControlIndex
@@ -94,12 +101,43 @@ const CommitRangeSelector = ({
           />
         )}
         onChange={async (event, newValue) => {
-          store.fetchGitRepoCommits(newValue.key);
+          store.fetchGitRepoBrances(newValue.key);
           setSelectedRepo(newValue);
         }}
       />
+
+
 {selectedRepo.key !== "" ? (
-  <Tooltip title="Select the commit from which you want to start comparing changes. This is usually an older commit." arrow placement="right">
+  <Tooltip title="Select branch." arrow placement="right">
+    <Autocomplete
+      disableClearable
+      style={{ marginBlock: 8 , width: 300 }}
+      autoHighlight
+      openOnFocus
+      options={branchesList.map((branch) => {
+        let splitName = branch.name.split('/');
+        let indexAfterHeads = splitName.indexOf('heads') + 1;
+        let elementsAfterHeads = splitName.slice(indexAfterHeads).join('/');
+        return { key: elementsAfterHeads, text: elementsAfterHeads };
+      })}      
+      getOptionLabel={(option) => `${option.text}`}
+      renderInput={(params) => (
+        <TextFieldM
+        {...params} 
+        label="Select a branch" 
+        variant="outlined"
+        />
+      )}
+
+      onChange={async (event, newValue) => {
+        store.fetchGitRepoCommits(selectedRepo.key, newValue.key);
+        setSelectedBranch(newValue);
+      }}
+    />
+  </Tooltip>
+) : null}
+
+{selectedBranch.key !== "" ? (
     <Autocomplete
       disableClearable
       style={{ marginBlock: 8 , width: 300 }}
@@ -120,11 +158,11 @@ const CommitRangeSelector = ({
         setSelectedStartCommit(newValue);
       }}
     />
-  </Tooltip>
 ) : null}
 
-{selectedRepo.key !== "" ? (
-  <Tooltip title="Select the commit up to which you want to view changes. This is usually a more recent commit." arrow placement="right">
+
+
+{selectedBranch.key !== "" ? (
     <Autocomplete
       disableClearable
       style={{ marginBlock: 8 , width: 300 }}
@@ -145,7 +183,6 @@ const CommitRangeSelector = ({
         setSelectedEndCommit(newValue);
       }}
     />
-  </Tooltip>
 ) : null}
 
 <br />
