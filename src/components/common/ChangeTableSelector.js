@@ -9,11 +9,11 @@ import TextFieldM from "@material-ui/core/TextField";
 import PullRequestSelector from "./PullRequestSelector";
 
 const baseDataType = [
-  { key: 0, text: "commit-range", type: "range" },
+ // { key: 0, text: "commit-range", type: "range" },
   { key: 1, text: "commit-date", type: "date" },
-  { key: 2, text: "pipeline-range", type: "pipeline" },
-  { key: 3, text: "release-range", type: "release" },
-  { key: 4, text: "pullrequest-range", type: "pullrequest" },
+ // { key: 2, text: "pipeline-range", type: "pipeline" },
+ // { key: 3, text: "release-range", type: "release" },
+ // { key: 4, text: "pullrequest-range", type: "pullrequest" },
 ];
 
 const ChangeTableSelector = observer(
