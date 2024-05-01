@@ -1,13 +1,12 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { headingLevelOptions } from "../../store/data/dropDownOptions";
-import FormContorlLabel from "@material-ui/core/FormControlLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { PrimaryButton } from "office-ui-fabric-react";
-
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -34,19 +33,29 @@ const TestContentSelector = ({
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
 
   useEffect(() => {
-    if (editingMode === false){  
+    if (editingMode === false) {  
       UpdateDocumentRequestObject();
     }
-  });
+  }, [selectedTestSuites, isSuiteSpecific]);
 
-  function UpdateDocumentRequestObject(){
-    let testSuiteIdList = undefined
-    if(isSuiteSpecific)
-    {
-        testSuiteIdList = selectedTestSuites.map((data) => {
-        return data.id
-      })
-    }
+  function UpdateDocumentRequestObject() {
+    let testSuiteIdList = [];
+
+    const addChildrenSuites = (suiteId) => {
+      const suite = testSuiteList.find((suite) => suite.id === suiteId);
+      if (suite) {
+        testSuiteIdList.push(suiteId);
+        const children = testSuiteList.filter((child) => child.parent === suiteId);
+        children.forEach((child) => {
+          addChildrenSuites(child.id);
+        });
+      }
+    };
+
+    selectedTestSuites.forEach((suite) => {
+      addChildrenSuites(suite.id);
+    });
+
     addToDocumentRequestObject(
       {
         type: type,
@@ -54,14 +63,17 @@ const TestContentSelector = ({
         skin: skin,
         headingLevel: contentHeadingLevel,
         data: {
-          testPlanId:selectedTestPlan.key,
-          testSuiteArray:testSuiteIdList,
-          includeAttachments:includeAttachments
+          testPlanId: selectedTestPlan.key,
+          testSuiteArray: testSuiteIdList,
+          includeAttachments: includeAttachments,
         },
       },
       contentControlIndex
-      );
+    );
   }
+
+  // Filter out the root level suite
+  const filteredTestSuiteList = testSuiteList.filter(suite => suite.level !== 1);
 
   return (
     <div>
@@ -89,9 +101,9 @@ const TestContentSelector = ({
         autoHighlight
         openOnFocus
         options={testPlansList.map((testplan) => {
-          return { key: testplan.id, text: testplan.name};
+          return { key: testplan.id, text: testplan.name };
         })}
-                getOptionLabel={(option) => `${option.text}`}
+        getOptionLabel={(option) => `${option.text}`}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -100,11 +112,11 @@ const TestContentSelector = ({
           />
         )}
         onChange={async (event, newValue) => {
-          store.fetchTestSuitesList(newValue.key)
+          store.fetchTestSuitesList(newValue.key);
           setSelectedTestPlan(newValue);
         }}
       />
-      <FormContorlLabel
+      <FormControlLabel
         control={
           <Checkbox
             value={includeAttachments}
@@ -116,49 +128,49 @@ const TestContentSelector = ({
         label="Include Attachments"
       />
 
-      <FormContorlLabel
+      <FormControlLabel
         control={
-        <Checkbox 
-          value={includeAttachments}
-          onChange={(event, checked) => {
-            setIsSuiteSpecific(checked);
-          }}
+          <Checkbox 
+            value={isSuiteSpecific}
+            onChange={(event, checked) => {
+              setIsSuiteSpecific(checked);
+            }}
           />
         }
         label="Enable suite specific selection "
       />
-{isSuiteSpecific ? (
-<Autocomplete
-      style={{ marginBlock: 8, width: 300 }}
-      multiple
-      options={testSuiteList}
-      disableCloseOnSelect
-      autoHighlight
-      groupBy={(option) => option.parent}
-      getOptionLabel={(option) => `${option.name} - (${option.id})`}
-      renderOption={(option, { selected }) => (
-        <React.Fragment>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {`${option.name} - (${option.id})`}
-        </React.Fragment>
-      )}
-      renderInput={(params) => (
-        <TextField 
-        {...params} 
-        label="With suite cases" 
-        variant="outlined"
+      {isSuiteSpecific ? (
+        <Autocomplete
+          style={{ marginBlock: 8, width: 300 }}
+          multiple
+          options={filteredTestSuiteList}
+          disableCloseOnSelect
+          autoHighlight
+          groupBy={(option) => option.parent}
+          getOptionLabel={(option) => `${option.name} - (${option.id})`}
+          renderOption={(option, { selected }) => (
+            <React.Fragment>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {`${option.name} - (${option.id})`}
+            </React.Fragment>
+          )}
+          renderInput={(params) => (
+            <TextField 
+              {...params} 
+              label="With suite cases" 
+              variant="outlined"
+            />
+          )}
+          onChange={async (event, newValue) => {
+            setSelectedTestSuites(newValue);
+          }}
         />
-        )}
-        onChange={async (event, newValue) => {
-          setSelectedTestSuites(newValue);
-        }}
-    />
-    ) : null}
+      ) : null}
       <br />
       <br />
       {/* works only in document managing mode */}
