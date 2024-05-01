@@ -41,11 +41,25 @@ const TestContentSelector = ({
 
   function UpdateDocumentRequestObject(){
     let testSuiteIdList = undefined
-    if(isSuiteSpecific)
-    {
-        testSuiteIdList = selectedTestSuites.map((data) => {
-        return data.id
-      })
+    if(isSuiteSpecific) {
+      testSuiteIdList = []; // Initialize only if the checkbox is checked
+  
+      // Function to recursively add children suites
+      const addChildrenSuites = (suiteId) => {
+        const suite = testSuiteList.find(suite => suite.id === suiteId);
+        if (suite && !testSuiteIdList.includes(suiteId)) {
+          testSuiteIdList.push(suiteId);
+          const children = testSuiteList.filter(child => child.parent === suiteId);
+          children.forEach(child => {
+            addChildrenSuites(child.id);
+          });
+        }
+      };
+  
+      // Add suites selected and their children
+      selectedTestSuites.forEach(suite => {
+        addChildrenSuites(suite.id);
+      });
     }
     addToDocumentRequestObject(
       {
