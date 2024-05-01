@@ -77,6 +77,8 @@ const TestContentSelector = ({
       );
   }
 
+const filteredTestSuiteList = testSuiteList.filter(suite => suite.level !== 1);
+  
   return (
     <div>
       <Autocomplete
@@ -145,7 +147,7 @@ const TestContentSelector = ({
 <Autocomplete
       style={{ marginBlock: 8, width: 300 }}
       multiple
-      options={testSuiteList}
+      options={filteredTestSuiteList}
       disableCloseOnSelect
       autoHighlight
       groupBy={(option) => option.parent}
