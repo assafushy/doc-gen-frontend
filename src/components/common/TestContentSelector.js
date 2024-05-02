@@ -77,7 +77,7 @@ const TestContentSelector = ({
       );
   }
 
-const filteredTestSuiteList = testSuiteList.filter(suite => suite.level !== 1);
+const filteredTestSuiteList = testSuiteList.slice(1); // Skip the first item of the list
   
   return (
     <div>
