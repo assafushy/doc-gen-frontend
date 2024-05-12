@@ -32,6 +32,9 @@ const TestContentSelector = ({
   const [includeAttachments, setIncludeAttachments] = useState(false);
   const [isSuiteSpecific, setIsSuiteSpecific] = useState(false);
   const [contentHeadingLevel, setContentHeadingLevel] = useState(1);
+  const [includeRequirements, setIncludeRequirements] = useState(false);
+  const [includeCustomerId, setIncludeCustomerId] = useState(false);
+
 
   useEffect(() => {
     if (editingMode === false){  
@@ -70,7 +73,9 @@ const TestContentSelector = ({
         data: {
           testPlanId:selectedTestPlan.key,
           testSuiteArray:testSuiteIdList,
-          includeAttachments:includeAttachments
+          includeAttachments:includeAttachments,
+          includeRequirements: includeRequirements,
+          includeCustomerId: includeCustomerId
         },
       },
       contentControlIndex
@@ -131,7 +136,29 @@ const filteredTestSuiteList = testSuiteList.slice(1); // Skip the first item of 
         }
         label="Include Attachments"
       />
-
+      <FormContorlLabel
+        control={
+          <Checkbox
+            checked={includeRequirements}
+            onChange={(event, checked) => {
+              setIncludeRequirements(checked);
+              if (!checked) setIncludeCustomerId(false); // Ensure Customer ID checkbox is also managed
+            }}
+          />
+        }
+        label="Include Requirements"
+      />
+       {includeRequirements && (
+        <FormContorlLabel
+          control={
+            <Checkbox
+              checked={includeCustomerId}
+              onChange={(event, checked) => setIncludeCustomerId(checked)}
+            />
+          }
+          label="Include Customer ID"
+        />
+      )}
       <FormContorlLabel
         control={
         <Checkbox 
@@ -140,9 +167,11 @@ const filteredTestSuiteList = testSuiteList.slice(1); // Skip the first item of 
             setIsSuiteSpecific(checked);
           }}
           />
+          
         }
         label="Enable suite specific selection "
       />
+      
 {isSuiteSpecific ? (
 <Autocomplete
       style={{ marginBlock: 8, width: 300 }}
